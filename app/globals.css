@@ -1,34 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------------------------------
+   SISTEMA iOS VISUAL BASE – ESTILO EMIGRANDO.DE
+--------------------------------------------------- */
+
+/* Modo claro */
 :root {
-  color-scheme: light;
+  --background: #f5f5f7;
+  --foreground: #020617;
+
+  --card: #ffffff;
+  --card-border: #e2e8f0;
+
+  --muted: #e5e7eb;
+  --muted-foreground: #6b7280;
+
+  --accent: #2563eb;
+  --accent-soft: #dbeafe;
+
+  --success: #22c55e;
+  --danger: #ef4444;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
 }
 
+/* Body global */
 html,
 body {
   padding: 0;
   margin: 0;
   min-height: 100%;
-}
-
-body {
-  background-color: #f5f5f7;
-  color: #020617;
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, system-ui, "SF Pro Text",
     "SF Pro Display", sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
+/* Reset */
 * {
   box-sizing: border-box;
 }
 
-/* Scrollbar limpio */
+/* Enlaces */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  opacity: 0.8;
+}
+
+/* Títulos */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+  padding: 0;
+}
+
+/* Scrollbar elegante */
 *::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
+
 *::-webkit-scrollbar-track {
   background: transparent;
 }
+
 *::-webkit-scrollbar-thumb {
   background: #cbd5f5;
-  border-radius: 999px;
+  border-radius: 9999px;
 }
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #a5b4fc;
+}
+
+/* Inputs estilo iOS */
+input,
+textarea,
+select {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--card-border);
+  background-color: white;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.95rem;
+  transition: all 0.15s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Botones básicos del navegador */
+button {
+  font-family: inherit;
+}
+
+/* Cards (base) */
+.card-ios {
+  background: var(--card);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  padding: 1.5rem;
+}
+
+/* Listas internas (para admin) */
+.list-ios {
+  background: white;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--card-border);
+}
+
+/* Animación suave */
+.fade-in {
+  animation: fadeIn 0.35s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fin */
