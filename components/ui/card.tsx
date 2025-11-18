@@ -1,4 +1,3 @@
-// components/ui/Card.tsx
 import { ReactNode } from "react";
 
 interface CardProps {
