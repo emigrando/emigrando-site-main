@@ -8,23 +8,27 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "14.2.5",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "formidable": "3.5.1",
-    "nodemailer": "6.9.12",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
     "clsx": "2.1.1",
-    "lucide-react": "latest"
+    "formidable": "3.5.1",
+    "lucide-react": "latest",
+    "next": "14.2.5",
+    "nodemailer": "6.9.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "autoprefixer": "10.4.20",
-    "postcss": "8.4.47",
-    "tailwindcss": "3.4.13",
-    "eslint": "8.57.0",
-    "eslint-config-next": "14.2.5",
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/ios": "^7.4.4",
     "@types/node": "20.11.30",
     "@types/react": "18.2.79",
     "@types/react-dom": "18.2.25",
+    "autoprefixer": "10.4.20",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.5",
+    "postcss": "8.4.47",
+    "tailwindcss": "3.4.13",
     "typescript": "5.6.2"
   }
 }
