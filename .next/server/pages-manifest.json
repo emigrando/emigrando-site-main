@@ -1,1 +1,11 @@
-{"/_error":"pages/_error.js","/_app":"pages/_app.js","/api/intake-login":"pages/api/intake-login.js","/api/intake-logout":"pages/api/intake-logout.js","/api/logout":"pages/api/logout.js","/api/log-visit":"pages/api/log-visit.js","/api/intake":"pages/api/intake.js","/api/contact":"pages/api/contact.js","/_document":"pages/_document.js","/404":"pages/404.html"}
+{
+  "/api/intake-login": "pages/api/intake-login.js",
+  "/api/intake-logout": "pages/api/intake-logout.js",
+  "/_app": "pages/_app.js",
+  "/api/log-visit": "pages/api/log-visit.js",
+  "/api/logout": "pages/api/logout.js",
+  "/_error": "pages/_error.js",
+  "/api/intake": "pages/api/intake.js",
+  "/api/contact": "pages/api/contact.js",
+  "/_document": "pages/_document.js"
+}
