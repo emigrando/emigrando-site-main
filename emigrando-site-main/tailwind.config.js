@@ -1,33 +1,46 @@
+// tailwind.config.mjs
+import { fontFamily } from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-    "./pages/**/*.{js,ts,jsx,tsx}"
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./pages/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        brand: {
-          bg: "#ffffff",
-          fg: "#000000",
-          primary: "#F9C51B",
-          danger: "#D54F54",
-          green: {
-            50:"#f2f7f3",100:"#dfeee4",200:"#bddcc6",300:"#94c4a5",
-            400:"#6dad86",500:"#4b906b",600:"#3b7457",700:"#2f5d47",800:"#274b3a",900:"#1f3c2f"
-          },
-          brown: {
-            50:"#f7f3f0",100:"#efe6df",200:"#dfcfc0",300:"#c6aa92",
-            400:"#a68066",500:"#8a654d",600:"#6e503e",700:"#5a4235",800:"#4a372d",900:"#3d2e26"
-          }
-        }
+        background: "#f5f5f7",
+        foreground: "#020617",
+        card: "#ffffff",
+        cardBorder: "#e2e8f0",
+        muted: "#e5e7eb",
+        mutedForeground: "#6b7280",
+        accent: "#2563eb",
+        accentSoft: "#dbeafe",
+        danger: "#ef4444",
+        success: "#22c55e",
+      },
+      borderRadius: {
+        xl: "1rem",
+        "2xl": "1.5rem",
+        "3xl": "2rem",
       },
       boxShadow: {
-        soft: "0 10px 30px rgba(0,0,0,.06)",
-        inset: "inset 2px 2px 6px rgba(0,0,0,.06), inset -2px -2px 6px rgba(255,255,255,.7)"
+        soft: "0 18px 60px rgba(15, 23, 42, 0.08)",
+        card: "0 18px 40px rgba(15, 23, 42, 0.06)",
       },
-      borderRadius: { xl2: "1.25rem" }
+      fontFamily: {
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "system-ui",
+          "SF Pro Text",
+          "SF Pro Display",
+          ...fontFamily.sans,
+        ],
+      },
     },
   },
   plugins: [],
