@@ -1,60 +1,103 @@
-// app/layout.tsx
 import "./globals.css";
-import type { Metadata } from "next";
-import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import { ReactNode } from "react";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Emigrando.de",
-  description: "Asesoría migratoria y social en Alemania",
+  description: "Asesoría migratoria clara, humana y profesional en Alemania",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
-      <body className="antialiased">
-        {/* Header / Navbar */}
-        <header className="sticky top-0 z-20 backdrop-blur bg-white/80 border-b border-gray-100">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <img src="/logo.svg" alt="Emigrando.de" className="h-9 w-9" />
-              <span className="font-extrabold tracking-tight text-lg">Emigrando.de</span>
-            </Link>
+      <body className="min-h-screen bg-white text-slate-900 antialiased">
+        {/* NAVBAR GLOBAL */}
+        <Navbar />
 
-            <nav className="hidden md:flex items-center gap-8 text-sm">
-              <Link href="/#servicios" className="hover:text-brand-accent">Servicios</Link>
-              <Link href="/titulos" className="hover:text-brand-accent">Títulos</Link>
-              <Link href="/#proceso" className="hover:text-brand-accent">Cómo trabajamos</Link>
-              <Link href="/contacto" className="hover:text-brand-accent">Contacto</Link>
-            </nav>
+        {/* CONTENIDO */}
+        <main>{children}</main>
 
-            <Link
-              href="/contacto"
-              className="rounded-full px-4 py-2 text-sm font-semibold bg-brand-primary hover:brightness-95 shadow"
-            >
-              Contactar asesor
-            </Link>
-          </div>
-        </header>
-
-        {/* Page content */}
-        {children}
-
-        {/* Footer */}
-        <footer className="py-10 bg-white border-t border-gray-100 mt-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-8 text-sm">
-            <div>
-              <div className="font-extrabold">Emigrando.de</div>
-              <p className="mt-2 text-brand-muted">Augsburg · info@emigrando.de</p>
+        {/* FOOTER GLASS · ESTILO VISION PRO */}
+        <footer className="mt-20 border-t border-white/40 bg-gradient-to-t from-slate-900/10 via-white/60 to-white/80 bg-white/50 backdrop-blur-2xl">
+          <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 md:flex-row md:items-center md:justify-between">
+            {/* Marca izquierda */}
+            <div className="flex items-center gap-3">
+              <div className="relative h-10 w-10">
+                {/* Halo suave */}
+                <div className="absolute inset-0 rounded-full bg-sky-400/30 blur-lg" />
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-indigo-500 text-xs font-semibold text-white shadow-[0_10px_30px_rgba(15,23,42,0.45)]">
+                  DE
+                </div>
+              </div>
+              <div className="rounded-2xl border border-white/60 bg-white/40 px-4 py-2 shadow-[0_10px_30px_rgba(15,23,42,0.18)]">
+                <p className="text-xs font-medium text-slate-700">
+                  Emigrando.de
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  Acompañamiento migratorio claro y humano en Alemania
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <a className="hover:underline" href="/impressum">Impressum</a><br />
-              <a className="hover:underline" href="/datenschutz">Datenschutz</a><br />
-              <a className="hover:underline" href="/agb">AGB</a>
-            </div>
+            {/* Iconos derecha con rebote iOS */}
+            <div className="flex items-center gap-5">
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/4915773684583"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="group relative inline-flex"
+              >
+                <span className="pointer-events-none absolute inset-0 rounded-full bg-emerald-400/0 blur-lg transition group-hover:bg-emerald-400/35" />
+                <img
+                  src="/icons/whatsapp.svg"
+                  alt="WhatsApp"
+                  className="relative h-7 w-7 transform transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:scale-110"
+                />
+              </a>
 
-            <div className="text-brand-muted">
-              © {new Date().getFullYear()} Emigrando.de
+              {/* Telegram */}
+              <a
+                href="https://t.me/Emigrando_de"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Telegram"
+                className="group relative inline-flex"
+              >
+                <span className="pointer-events-none absolute inset-0 rounded-full bg-sky-400/0 blur-lg transition group-hover:bg-sky-400/35" />
+                <img
+                  src="/icons/telegram.svg"
+                  alt="Telegram"
+                  className="relative h-7 w-7 transform transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:scale-110"
+                />
+              </a>
+
+              {/* Google Play (próximamente) */}
+              <a
+                href="#"
+                aria-label="Google Play (pronto)"
+                className="group inline-flex cursor-default items-center opacity-45 transition"
+              >
+                <img
+                  src="/icons/google-play.svg"
+                  alt="Google Play"
+                  className="h-[32px] transform transition-transform duration-200 ease-out group-hover:scale-105"
+                />
+              </a>
+
+              {/* App Store (próximamente) */}
+              <a
+                href="#"
+                aria-label="App Store (pronto)"
+                className="group inline-flex cursor-default items-center opacity-45 transition"
+              >
+                <img
+                  src="/icons/app-store.svg"
+                  alt="App Store"
+                  className="h-[32px] transform transition-transform duration-200 ease-out group-hover:scale-105"
+                />
+              </a>
             </div>
           </div>
         </footer>

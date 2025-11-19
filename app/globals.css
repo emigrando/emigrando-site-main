@@ -2,74 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-/* -------------------------------------------------
-   SISTEMA iOS VISUAL BASE – ESTILO EMIGRANDO.DE
---------------------------------------------------- */
+/* -----------------------------
+   BASE GLOBAL · MODO CLARO iOS
+------------------------------ */
 
-/* Modo claro */
-:root {
-  --background: #f5f5f7;
-  --foreground: #020617;
-
-  --card: #ffffff;
-  --card-border: #e2e8f0;
-
-  --muted: #e5e7eb;
-  --muted-foreground: #6b7280;
-
-  --accent: #2563eb;
-  --accent-soft: #dbeafe;
-
-  --success: #22c55e;
-  --danger: #ef4444;
-
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
-  --radius-3xl: 2rem;
-}
-
-/* Body global */
 html,
 body {
-  padding: 0;
   margin: 0;
+  padding: 0;
   min-height: 100%;
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, system-ui, "SF Pro Text",
-    "SF Pro Display", sans-serif;
+  background-color: #f5f7fb; /* mismo tono que el hero */
+  color: #0f172a;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Reset */
 * {
   box-sizing: border-box;
 }
 
 /* Enlaces */
+
 a {
-  color: var(--accent);
+  color: #2563eb; /* azul tipo Tailwind */
   text-decoration: none;
 }
+
 a:hover {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 /* Títulos */
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
+  font-family: Sora, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   margin: 0;
-  padding: 0;
 }
 
-/* Scrollbar elegante */
+/* Scrollbar minimal */
+
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -80,69 +59,160 @@ h6 {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #cbd5f5;
+  background: rgba(148, 163, 184, 0.4);
   border-radius: 9999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #a5b4fc;
+  background: rgba(148, 163, 184, 0.7);
 }
 
-/* Inputs estilo iOS */
+/* -----------------------------
+   INPUTS · TOQUE SUAVE iOS
+   (el estilo fino viene sobre todo
+    de las clases Tailwind)
+------------------------------ */
+
 input,
 textarea,
 select {
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--card-border);
-  background-color: white;
-  padding: 0.625rem 0.75rem;
+  font-family: inherit;
   font-size: 0.95rem;
+  color: inherit;
   transition: all 0.15s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(148, 163, 184, 0.8);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.45);
 }
 
-/* Botones básicos del navegador */
-button {
-  font-family: inherit;
+/* -----------------------------
+   PARTICULAS / FONDO SENSORIAL
+------------------------------ */
+
+.particle {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(18px);
+  opacity: 0.95;
+  background: radial-gradient(
+    circle at center,
+    rgba(56, 189, 248, 0.55),
+    transparent 65%
+  );
+  animation: float-slow 10s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
-/* Cards (base) */
-.card-ios {
-  background: var(--card);
-  border-radius: var(--radius-3xl);
-  border: 1px solid var(--card-border);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
-  padding: 1.5rem;
+.particle--gold {
+  background: radial-gradient(
+    circle at center,
+    rgba(234, 179, 8, 0.45),
+    transparent 65%
+  );
 }
 
-/* Listas internas (para admin) */
-.list-ios {
-  background: white;
-  border-radius: var(--radius-2xl);
-  border: 1px solid var(--card-border);
-}
-
-/* Animación suave */
-.fade-in {
-  animation: fadeIn 0.35s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
+@keyframes float-slow {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.9;
   }
+  50% {
+    transform: translate3d(30px, -20px, 0) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-24px, 18px, 0) scale(1.02);
+    opacity: 0.92;
+  }
+}
+
+/* Card base “vidrio” por si la usamos */
+
+.card-ios {
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 55%),
+    rgba(255, 255, 255, 0.96);
+  border-radius: 2rem;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+}
+
+/* Pequeña animación de entrada */
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+@keyframes fadeInUp {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Fin */
+/* Fondo animado para el hero (opcional, para futuro) */
+
+.hero-ambient {
+  position: absolute;
+  inset: -200px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.32), transparent 55%),
+    radial-gradient(circle at 100% 10%, rgba(129, 140, 248, 0.32), transparent 55%),
+    radial-gradient(circle at 10% 100%, rgba(244, 114, 182, 0.27), transparent 55%);
+  opacity: 1;
+  filter: blur(6px);
+  mix-blend-mode: normal;
+  pointer-events: none;
+  z-index: 0;
+  animation: heroAmbientMove 14s ease-in-out infinite alternate;
+}
+
+@keyframes heroAmbientMove {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-26px, 12px, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(20px, -16px, 0) scale(1.02);
+  }
+}
+
+/* Ruido muy sutil para textura */
+
+.hero-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.2;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+@keyframes cardFloat {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.card-float {
+  animation: cardFloat 14s ease-in-out infinite;
+}

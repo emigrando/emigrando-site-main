@@ -1,12 +1,3 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/datenschutz/page": "app/datenschutz/page.js",
-  "/agb/page": "app/agb/page.js",
-  "/contacto/page": "app/contacto/page.js",
-  "/impressum/page": "app/impressum/page.js",
-  "/intake/login/page": "app/intake/login/page.js",
-  "/intake/page": "app/intake/page.js",
-  "/page": "app/page.js",
-  "/titulos/page": "app/titulos/page.js",
-  "/admin/visits/page": "app/admin/visits/page.js"
+  "/page": "app/page.js"
 }
