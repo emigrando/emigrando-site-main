@@ -1,62 +1,56 @@
 "use client";
 
-import Link from "next/link";
+import { useCallback } from "react";
+
+const NAV_ITEMS = [
+  { label: "Servicios", target: "servicios" },
+  { label: "Reconocimiento de títulos", target: "titulos" },
+  { label: "Cómo trabajamos", target: "como-trabajamos" },
+  { label: "Contacto", target: "contacto" },
+];
+
+function scrollToId(id: string) {
+  if (typeof document === "undefined") return;
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
 
 export default function Navbar() {
+  const handleClick = useCallback((target: string) => {
+    scrollToId(target);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur-2xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        {/* Logo / marca */}
-        <Link href="/" className="inline-flex items-center gap-3">
-          {/* Circulito DE más marcado */}
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-indigo-500 text-[0.7rem] font-semibold text-white shadow-md shadow-sky-500/35">
-            DE
-          </div>
-
-          {/* Pastilla Emigrando.de más elegante */}
-          <div className="rounded-full border border-white/70 bg-slate-900/5 px-4 py-1.5 shadow-sm shadow-slate-900/5">
-            <span className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-600 bg-clip-text text-sm font-semibold text-transparent tracking-tight">
-              Emigrando.de
-            </span>
-          </div>
-        </Link>
-
-        {/* Navegación */}
-        <nav className="hidden items-center gap-6 text-sm text-slate-600 sm:flex">
-          <Link
-            href="#servicios"
-            className="transition-colors hover:text-indigo-600"
-          >
-            Servicios
-          </Link>
-          <Link
-            href="#titulos"
-            className="transition-colors hover:text-indigo-600"
-          >
-            Títulos
-          </Link>
-          <Link
-            href="#como-trabajamos"
-            className="transition-colors hover:text-indigo-600"
-          >
-            Cómo trabajamos
-          </Link>
-          <Link
-            href="#contacto"
-            className="transition-colors hover:text-indigo-600"
-          >
-            Contacto
-          </Link>
-        </nav>
-
-        {/* Botón principal */}
-        <Link
-          href="#contacto"
-          className="hidden rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-indigo-500/40 hover:brightness-110 sm:inline-flex"
+    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/80 backdrop-blur-md">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        {/* Logo */}
+        <button
+          type="button"
+          onClick={() => handleClick("servicios")}
+          className="text-base font-semibold tracking-tight text-slate-900"
         >
-          Contactar asesor
-        </Link>
-      </div>
+          <span className="bg-gradient-to-r from-sky-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
+            Emigrando.de
+          </span>
+        </button>
+
+        {/* Links */}
+        <div className="flex items-center gap-6 text-sm text-slate-600">
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.target}
+              type="button"
+              onClick={() => handleClick(item.target)}
+              className="relative font-medium text-slate-600 transition-colors hover:text-slate-900"
+            >
+              {item.label}
+              <span className="pointer-events-none absolute inset-x-0 -bottom-1 h-[2px] scale-x-0 bg-gradient-to-r from-sky-400 to-indigo-500 transition-transform duration-200 group-hover:scale-x-100" />
+            </button>
+          ))}
+        </div>
+      </nav>
     </header>
   );
 }
