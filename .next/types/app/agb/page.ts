@@ -1,4 +1,4 @@
-// File: C:\Users\Cache\Downloads\emigrando-site-main\emigrando-site-main\app\agb\page.tsx
+// File: C:\Users\Cache\Desktop\emigrando-site-main\app\agb\page.tsx
 import * as entry from '../../../../app/agb/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
