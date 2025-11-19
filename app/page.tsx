@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { motion } from "framer-motion";
+
 const scrollToId = (id: string) => {
   if (typeof document === "undefined") return;
   const el = document.getElementById(id);
@@ -18,59 +18,6 @@ const fadeUp = {
 };
 
 export default function HomePage() {
-  const [formData, setFormData] = useState({
-    nombre: "",
-    email: "",
-    situation: "",
-    mensaje: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setSent(false);
-    setError(null);
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.nombre,
-          email: formData.email,
-          situation: formData.situation,
-          message: formData.mensaje,
-          source: "home-mini-form",
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Respuesta no válida del servidor");
-      }
-
-      setSent(true);
-      setFormData({
-        nombre: "",
-        email: "",
-        situation: "",
-        mensaje: "",
-      });
-    } catch (err) {
-      console.error(err);
-      setError(
-        "No se pudo enviar el mensaje. Inténtalo de nuevo o usa el botón de contactar asesor."
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#f5f7fb] to-white text-slate-900">
       {/* HERO */}
@@ -183,10 +130,7 @@ export default function HomePage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <motion.div
                   className="group rounded-2xl border border-indigo-100 bg-indigo-50/80 px-4 py-5 shadow-sm transition-all"
-                  whileHover={{
-                    y: -4,
-                    scale: 1.01,
-                  }}
+                  whileHover={{ y: -4, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
                 >
                   <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-indigo-500 text-[13px] text-white">
@@ -203,10 +147,7 @@ export default function HomePage() {
 
                 <motion.div
                   className="group rounded-2xl border border-violet-100 bg-violet-50/80 px-4 py-5 shadow-sm transition-all"
-                  whileHover={{
-                    y: -4,
-                    scale: 1.01,
-                  }}
+                  whileHover={{ y: -4, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
                 >
                   <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-violet-500 text-[13px] text-white">
@@ -216,17 +157,15 @@ export default function HomePage() {
                     Formación y empleo
                   </h3>
                   <p className="mt-2 text-xs text-slate-600">
-                    Reconocimiento de títulos universitarios y escolares; búsqueda laboral; 
-                    perfiles profesionales y caminos de formación técnica o universitaria.
+                    Reconocimiento de títulos universitarios y escolares; búsqueda
+                    laboral; perfiles profesionales y caminos de formación técnica
+                    o universitaria.
                   </p>
                 </motion.div>
 
                 <motion.div
                   className="group rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-5 shadow-sm transition-all"
-                  whileHover={{
-                    y: -4,
-                    scale: 1.01,
-                  }}
+                  whileHover={{ y: -4, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
                 >
                   <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500 text-[13px] text-white">
@@ -243,10 +182,7 @@ export default function HomePage() {
 
                 <motion.div
                   className="group rounded-2xl border border-rose-100 bg-rose-50/80 px-4 py-5 shadow-sm transition-all"
-                  whileHover={{
-                    y: -4,
-                    scale: 1.01,
-                  }}
+                  whileHover={{ y: -4, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
                 >
                   <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-rose-500 text-[13px] text-white">
@@ -257,7 +193,7 @@ export default function HomePage() {
                   </h3>
                   <p className="mt-2 text-xs text-slate-600">
                     Escritos y acompañamiento ante Jobcenter; Ausländerbehörde;
-                    Finanzamt y tribunales administrativos entre otros.
+                    Finanzamt y tribunales administrativos, entre otros.
                   </p>
                 </motion.div>
               </div>
@@ -279,7 +215,7 @@ export default function HomePage() {
               </h3>
               <p className="mt-2 text-xs text-slate-500">
                 Cartas y formularios oficiales listos para entregar en Behörden,
-                sin demoras
+                sin demoras.
               </p>
             </Card>
 
@@ -325,74 +261,75 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECCIÓN CTA / FORMULARIO RESUMEN */}
+      {/* CÓMO TRABAJAMOS + MINI FORM QUE REDIRIGE AL FORMULARIO COMPLETO */}
       <section
-  id="como-trabajamos"
-  className="border-t border-slate-100 bg-[#f8fafc]"
->
-  <div className="mx-auto max-w-6xl px-4 py-16 lg:py-18">
-    <div className="grid gap-10 lg:grid-cols-[1.1fr,0.9fr] lg:items-center">
-      {/* TEXTO LADO IZQUIERDO: CÓMO TRABAJAMOS */}
-      <div>
-        <span className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-medium text-indigo-600">
-          Cómo trabajamos · paso a paso
-        </span>
-        <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
-          Nos cuentas tu caso, te damos una oferta clara y empezamos juntos.
-        </h2>
-        <p className="mt-3 text-sm text-slate-600">
-          No trabajamos con promesas vacías. Partimos de tu
-          situación real y de lo que se puede lograr con las leyes que existen
-          ahora mismo en Alemania.
-        </p>
-        <div className="mt-5 grid gap-3 text-sm text-slate-600">
-          <div className="flex gap-3">
-            <span className="mt-[3px] h-5 w-5 shrink-0 rounded-full bg-emerald-100 text-[12px] flex items-center justify-center text-emerald-700">
-              1
-            </span>
-            <p>
-              Nos contactas y nos cuentas sobre tu caso: dónde estás, qué permiso tienes
-              o buscas, qué autoridad está involucrada o cualquier otra inquietud.
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <span className="mt-[3px] h-5 w-5 shrink-0 rounded-full bg-sky-100 text-[12px] flex items-center justify-center text-sky-700">
-              2
-            </span>
-            <p>
-              Analizamos tu situación y te envíamos una propuesta gratuita con objetivos
-              concretos y realistas; qué se puede hacer y qué no.
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <span className="mt-[3px] h-5 w-5 shrink-0 rounded-full bg-violet-100 text-[12px] flex items-center justify-center text-violet-700">
-              3
-            </span>
-            <p>
-              Si aceptas, haces el primer pago de anticipo y empezamos de inmediato
-              con los escritos, formularios y pasos necesarios ante las autoridades
-              que correspondan.
-            </p>
-          </div>
-        </div>
-      </div>
+        id="como-trabajamos"
+        className="border-t border-slate-100 bg-[#f8fafc]"
+      >
+        <div className="mx-auto max-w-6xl px-4 py-16 lg:py-18">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr,0.9fr] lg:items-center">
+            {/* TEXTO LADO IZQUIERDO: CÓMO TRABAJAMOS */}
+            <div>
+              <span className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-medium text-indigo-600">
+                Cómo trabajamos · paso a paso
+              </span>
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
+                Nos cuentas tu caso, te damos una oferta clara y empezamos juntos.
+              </h2>
+              <p className="mt-3 text-sm text-slate-600">
+                No trabajamos con promesas vacías. Partimos de tu situación real y
+                de lo que se puede lograr con las leyes que existen ahora mismo en
+                Alemania.
+              </p>
+              <div className="mt-5 grid gap-3 text-sm text-slate-600">
+                <div className="flex gap-3">
+                  <span className="mt-[3px] h-5 w-5 shrink-0 rounded-full bg-emerald-100 text-[12px] flex items-center justify-center text-emerald-700">
+                    1
+                  </span>
+                  <p>
+                    Nos contactas y nos cuentas sobre tu caso: dónde estás, qué permiso
+                    tienes o buscas, qué autoridad está involucrada o qué carta te llegó.
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="mt-[3px] h-5 w-5 shrink-0 rounded-full bg-sky-100 text-[12px] flex items-center justify-center text-sky-700">
+                    2
+                  </span>
+                  <p>
+                    Analizamos tu situación y te enviamos una propuesta gratuita con
+                    objetivos concretos y realistas: qué se puede hacer y qué no.
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="mt-[3px] h-5 w-5 shrink-0 rounded-full bg-violet-100 text-[12px] flex items-center justify-center text-violet-700">
+                    3
+                  </span>
+                  <p>
+                    Si aceptas, haces el primer pago de anticipo y empezamos de inmediato
+                    con los escritos, formularios y pasos necesarios ante las autoridades
+                    que correspondan.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-
-            {/* FORMULARIO (envía directo a /api/contact) */}
-            <Card 
-            id="contacto"
-            className="rounded-2xl border-slate-100 bg-white p-6 shadow-sm">
+            {/* MINI FORM -> REDIRECCIÓN A /contacto */}
+            <Card
+              id="contacto"
+              className="rounded-2xl border-slate-100 bg-white p-6 shadow-sm"
+            >
               <h3 className="text-sm font-semibold text-slate-900">
                 Empecemos con un primer contacto
               </h3>
               <p className="mt-2 text-xs text-slate-500">
-                Este mini formulario solo recoge lo básico para que podamos
-                entender tu caso y asignarte el tipo de asesoría correcta.
+                Este mini formulario solo recoge lo básico. Al enviarlo irás al
+                formulario completo para terminar el proceso.
               </p>
 
               <form
                 className="mt-4 space-y-3 text-sm"
-                onSubmit={handleSubmit}
+                action="/contacto"
+                method="get"
               >
                 <div>
                   <label className="block text-xs font-medium text-slate-700">
@@ -403,11 +340,6 @@ export default function HomePage() {
                     type="text"
                     name="nombre"
                     placeholder="Tu nombre completo"
-                    value={formData.nombre}
-                    onChange={(e) =>
-                      setFormData({ ...formData, nombre: e.target.value })
-                    }
-                    required
                   />
                 </div>
 
@@ -420,11 +352,6 @@ export default function HomePage() {
                     type="email"
                     name="email"
                     placeholder="tu@correo.com"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    required
                   />
                 </div>
 
@@ -435,11 +362,6 @@ export default function HomePage() {
                   <select
                     name="situation"
                     className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
-                    value={formData.situation}
-                    onChange={(e) =>
-                      setFormData({ ...formData, situation: e.target.value })
-                    }
-                    required
                   >
                     <option value="">Selecciona una opción</option>
                     <option value="fuera">Estoy fuera de Alemania</option>
@@ -462,30 +384,14 @@ export default function HomePage() {
                     rows={3}
                     className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 resize-none focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
                     placeholder="Ej: Estoy en proceso de Niederlassung y tengo dudas con Jobcenter / Ausländerbehörde..."
-                    value={formData.mensaje}
-                    onChange={(e) =>
-                      setFormData({ ...formData, mensaje: e.target.value })
-                    }
-                    required
                   />
                 </div>
 
-                {error && (
-                  <p className="text-[11px] text-rose-500">{error}</p>
-                )}
-
-                {sent && !error && (
-                  <p className="text-[11px] text-emerald-600">
-                    Mensaje enviado. Te responderé lo antes posible.
-                  </p>
-                )}
-
                 <Button
                   type="submit"
-                  className="mt-2 w-full rounded-full shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all disabled:opacity-60"
-                  disabled={loading}
+                  className="mt-2 w-full rounded-full shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all"
                 >
-                  {loading ? "Enviando..." : "Ir al formulario completo"}
+                  Ir al formulario completo
                 </Button>
 
                 <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
