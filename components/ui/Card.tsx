@@ -1,16 +1,22 @@
-import { ReactNode } from "react";
+import { HTMLAttributes } from "react";
 
-interface CardProps {
-  children: ReactNode;
-  className?: string;
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  bordered?: boolean;
 }
 
-export function Card({ children, className = "" }: CardProps) {
+export function Card({
+  className = "",
+  bordered = true,
+  ...props
+}: CardProps) {
+  const base =
+    "rounded-2xl bg-white/90 backdrop-blur-sm shadow-soft";
+  const border = bordered ? " border border-slate-100" : "";
+
   return (
     <div
-      className={`bg-card rounded-3xl shadow-card border border-cardBorder ${className}`}
-    >
-      {children}
-    </div>
+      className={`${base}${border} ${className}`}
+      {...props}
+    />
   );
 }
