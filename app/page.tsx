@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, FormEvent } from "react";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import { motion } from "framer-motion";
 const scrollToId = (id: string) => {
   if (typeof document === "undefined") return;
