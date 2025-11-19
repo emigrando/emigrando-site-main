@@ -81,7 +81,6 @@ export default function HomePage() {
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Button
-                size="lg"
                 className="rounded-full px-6 shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all"
               >
                 Quiero asesoría
