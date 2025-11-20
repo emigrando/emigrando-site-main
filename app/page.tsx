@@ -236,7 +236,7 @@ export default function HomePage() {
                     Apoyos sociales
                   </h3>
                   <p className="mt-2 text-xs text-slate-600">
-                    Bürgergeld; Wohngeld; Kinderzuschlag; Kindergeld y otros
+                    Bürgergeld; AsylbLG; Kinderzuschlag; Kindergeld y otros
                     beneficios sociales.
                   </p>
                 </motion.div>
@@ -357,7 +357,7 @@ export default function HomePage() {
                     2
                   </span>
                   <p>
-                    Analizo tu situación y te envío una propuesta gratuita con
+                    Analizo tu situación y te enviamos una propuesta gratuita con
                     objetivos concretos y realistas: qué se puede hacer y qué no.
                   </p>
                 </div>
@@ -383,7 +383,7 @@ export default function HomePage() {
                 Empecemos con un primer contacto
               </h3>
               <p className="mt-2 text-xs text-slate-500">
-                Este mini formulario recoge lo básico para que pueda entender tu caso
+                Este mini formulario recoge lo básico para que podamos entender tu caso
                 y darte una respuesta inicial útil.
               </p>
 
@@ -456,7 +456,7 @@ export default function HomePage() {
                       Reconocimiento de títulos universitarios / empleo / Formación
                     </option>
                     <option value="apoyos_sociales">
-                      Apoyos sociales (Bürgergeld, Wohngeld...)
+                      Apoyos sociales (ALG I, Bürgergeld, AsylbLG...)
                     </option>
                     <option value="defensa_administrativa">
                       Asesoria en defensa administrativa (Jobcenter, Ausländerbehörde...)
@@ -499,7 +499,7 @@ export default function HomePage() {
                 >
                   {miniSending
                     ? "Enviando..."
-                    : "Enviar y seguir al formulario completo"}
+                    : "Enviar"}
                 </Button>
 
                 {miniOk && (
