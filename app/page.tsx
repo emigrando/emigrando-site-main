@@ -63,7 +63,8 @@ export default function HomePage() {
     }
   } catch (e) {
     console.error(e);
-    setMiniErr("Error de red al enviar el contacto.");
+    // si no quieres mostrar nada al usuario, comenta o borra esta línea:
+    // setMiniErr("Error de red al enviar el contacto.");
   } finally {
     setMiniSending(false);
   }
