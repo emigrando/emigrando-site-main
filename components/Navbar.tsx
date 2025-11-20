@@ -35,6 +35,24 @@ export default function Navbar() {
             >
               {item.label}
             </a>
+            <a
+              href="/impressum"
+              className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
+            >
+              Impressum
+            </a>
+            <a
+              href="/datenschutz"
+              className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
+            >
+              Datenschutz
+            </a>
+            <a
+              href="/agb"
+              className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
+            >
+              AGB
+            </a>
           ))}
         </nav>
 

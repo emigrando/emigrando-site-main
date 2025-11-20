@@ -38,7 +38,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </p>
               </div>
             </div>
-
+            {/* Enlaces legales */}
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+              <a href="/impressum" className="hover:text-slate-700">
+                Impressum
+              </a>
+              <a href="/datenschutz" className="hover:text-slate-700">
+                Datenschutz
+              </a>
+              <a href="/agb" className="hover:text-slate-700">
+                AGB
+               </a>
+              </div>
             {/* Iconos derecha con rebote iOS */}
             <div className="flex items-center gap-5">
               {/* WhatsApp */}
