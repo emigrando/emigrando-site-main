@@ -16,60 +16,58 @@ export default function HomePage() {
   const [miniErr, setMiniErr] = useState<string | null>(null);
 
   async function handleMiniSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setMiniOk(null);
-    setMiniErr(null);
-    setMiniSending(true);
+  event.preventDefault();
+  setMiniOk(null);
+  setMiniErr(null);
+  setMiniSending(true);
 
-    try {
-      const fd = new FormData(event.currentTarget);
+  try {
+    const fd = new FormData(event.currentTarget);
 
-      const payload = {
-        nombre: (fd.get("nombre") || "").toString().trim(),
-        email: (fd.get("email") || "").toString().trim(),
-        telefono: (fd.get("telefono") || "").toString().trim(),
-        ciudad: (fd.get("ciudad") || "").toString().trim(),
-        tema: (fd.get("tema") || "").toString().trim(),
-        mensaje: (fd.get("mensaje") || "").toString().trim(),
-      };
+    const payload = {
+      nombre: (fd.get("nombre") || "").toString().trim(),
+      email: (fd.get("email") || "").toString().trim(),
+      telefono: (fd.get("telefono") || "").toString().trim(),
+      ciudad: (fd.get("ciudad") || "").toString().trim(),
+      tema: (fd.get("tema") || "").toString().trim(),
+      mensaje: (fd.get("mensaje") || "").toString().trim(),
+    };
 
-      if (
-        !payload.nombre ||
-        !payload.email ||
-        !payload.telefono ||
-        !payload.ciudad ||
-        !payload.tema ||
-        !payload.mensaje
-      ) {
-        setMiniErr("Por favor completa todos los campos del formulario.");
-        setMiniSending(false);
-        return;
-      }
-
-      const r = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const j = await r.json().catch(() => ({} as any));
-
-      if (r.ok && j?.ok) {
-        setMiniOk(
-          "Mensaje enviado correctamente. Te responderé por correo o WhatsApp."
-        );
-        event.currentTarget.reset();
-      } else {
-        setMiniErr(j?.error || "Error interno al enviar el contacto.");
-      }
-    } catch (e) {
-      console.error(e);
-      // si no quieres mostrar nada al usuario, comenta o borra esta línea:
-    // setMiniErr("Error de red al enviar el contacto.");
-    } finally {
+    // misma validación que ya tenías
+    if (
+      !payload.nombre ||
+      !payload.email ||
+      !payload.telefono ||
+      !payload.ciudad ||
+      !payload.tema ||
+      !payload.mensaje
+    ) {
+      setMiniErr("Por favor completa todos los campos del formulario.");
       setMiniSending(false);
+      return;
     }
+
+    // IMPORTANTE: no pongas Content-Type, el navegador lo pone solo (multipart/form-data)
+    const r = await fetch("/api/contact", {
+      method: "POST",
+      body: fd,
+    });
+
+    const j = await r.json().catch(() => ({} as any));
+
+    if (r.ok && j?.ok) {
+      setMiniOk("Mensaje enviado correctamente. Te responderé por correo o WhatsApp.");
+      event.currentTarget.reset();
+    } else {
+      setMiniErr(j?.error || "Error interno al enviar el contacto.");
+    }
+  } catch (e) {
+    console.error(e);
+    setMiniErr("Error de red al enviar el contacto.");
+  } finally {
+    setMiniSending(false);
   }
+}
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#f5f7fb] to-white text-slate-900">
@@ -391,6 +389,7 @@ export default function HomePage() {
               <form
                 className="mt-4 space-y-3 text-sm"
                 onSubmit={handleMiniSubmit}
+                
               >
                 <div>
                   <label className="block text-xs font-medium text-slate-700">
@@ -466,7 +465,20 @@ export default function HomePage() {
                     <option value="otro">Otro motivo</option>
                   </select>
                 </div>
-
+               <div>
+                <label className="block text-xs font-medium text-slate-700">
+                  Adjuntar documentos (opcional)
+                </label>
+                <input
+                  className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+                  type="file"
+                  name="adjuntos"
+                  multiple
+                />
+                <p className="mt-1 text-[11px] leading-relaxed text-slate-400">
+                  Puedes adjuntar cartas, Bescheide o documentos en PDF, JPG o PNG. Máx. 5 MB en total.
+                </p>
+               </div> 
                 <div>
                   <label className="block text-xs font-medium text-slate-700">
                     Cuéntame brevemente tu caso
