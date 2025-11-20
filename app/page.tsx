@@ -366,7 +366,7 @@ export default function HomePage() {
                     3
                   </span>
                   <p>
-                    Si aceptas, haces el primer pago de anticipo y empezamos con
+                    Si aceptas, te hacemos una propuesta y empezamos con
                     los escritos, formularios y pasos necesarios ante las autoridades
                     que correspondan.
                   </p>
