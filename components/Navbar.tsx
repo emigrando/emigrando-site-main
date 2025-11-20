@@ -1,56 +1,63 @@
-"use client";
+'use client';
 
-import { useCallback } from "react";
+import Link from "next/link";
 
-const NAV_ITEMS = [
-  { label: "Servicios", target: "servicios" },
-  { label: "Reconocimiento de títulos", target: "titulos" },
-  { label: "Cómo trabajamos", target: "como-trabajamos" },
-  { label: "Contacto", target: "contacto" },
+const navLinks = [
+  { href: "#servicios", label: "Servicios" },
+  { href: "#titulos", label: "Reconocimiento de títulos" },
+  { href: "#como-trabajamos", label: "Cómo trabajamos" },
+  { href: "#contacto", label: "Contacto" },
 ];
 
-function scrollToId(id: string) {
-  if (typeof document === "undefined") return;
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-}
-
 export default function Navbar() {
-  const handleClick = useCallback((target: string) => {
-    scrollToId(target);
-  }, []);
-
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/80 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        {/* Logo */}
-        <button
-          type="button"
-          onClick={() => handleClick("servicios")}
-          className="text-base font-semibold tracking-tight text-slate-900"
-        >
-          <span className="bg-gradient-to-r from-sky-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
-            Emigrando.de
+    <header className="sticky top-0 z-40 border-b border-slate-100/60 bg-white/80 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5">
+        {/* Marca / logo */}
+        <Link href="/" className="flex items-center gap-2">
+          {/* Aquí luego cambiamos por tu logo */}
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-indigo-500 text-xs font-semibold text-white shadow-md">
+            DE
+          </div>
+          <span className="text-sm font-semibold tracking-tight">
+            <span className="text-slate-900">Emigrando</span>
+            <span className="text-violet-500">.de</span>
           </span>
-        </button>
+        </Link>
 
-        {/* Links */}
-        <div className="flex items-center gap-6 text-sm text-slate-600">
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.target}
-              type="button"
-              onClick={() => handleClick(item.target)}
-              className="relative font-medium text-slate-600 transition-colors hover:text-slate-900"
+        {/* Navegación escritorio */}
+        <nav className="hidden items-center gap-7 text-sm text-slate-600 md:flex">
+          {navLinks.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="relative transition-colors hover:text-indigo-600"
             >
               {item.label}
-              <span className="pointer-events-none absolute inset-x-0 -bottom-1 h-[2px] scale-x-0 bg-gradient-to-r from-sky-400 to-indigo-500 transition-transform duration-200 group-hover:scale-x-100" />
-            </button>
+            </a>
           ))}
+        </nav>
+
+        {/* CTA escritorio */}
+        <div className="hidden md:block">
+          <a
+            href="#contacto"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all"
+          >
+            Contactar asesor
+          </a>
         </div>
-      </nav>
+
+        {/* Vista móvil: solo botón compacto */}
+        <div className="md:hidden">
+          <a
+            href="#contacto"
+            className="inline-flex items-center justify-center rounded-full border border-indigo-200 bg-white/90 px-3 py-1.5 text-xs font-medium text-indigo-600 shadow-sm"
+          >
+            Contactar
+          </a>
+        </div>
+      </div>
     </header>
   );
 }

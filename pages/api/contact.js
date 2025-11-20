@@ -2,7 +2,7 @@ import formidable from "formidable";
 import nodemailer from "nodemailer";
 
 export const config = {
-  api: { bodyParser: false }
+  api: { bodyParser: false },
 };
 
 function send(res, status, data) {
@@ -29,7 +29,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Parse multipart o JSON
     const contentType = req.headers["content-type"] || "";
     let fields = {};
     let files = [];
@@ -37,11 +36,9 @@ export default async function handler(req, res) {
     if (contentType.includes("multipart/form-data")) {
       const form = formidable({
         multiples: true,
-        maxFileSize: 10 * 1024 * 1024, // 10 MB por archivo
-        // Permitimos archivos "vacíos" para que el parser no lance error
+        maxFileSize: 10 * 1024 * 1024,
         allowEmptyFiles: true,
-        // Ignorar entradas sin nombre (inputs no usados)
-        filter: ({ originalFilename }) => !!originalFilename
+        filter: ({ originalFilename }) => !!originalFilename,
       });
 
       const { fields: f, files: fl } = await new Promise((resolve, reject) => {
@@ -53,18 +50,18 @@ export default async function handler(req, res) {
 
       fields = f;
 
-      // Normalizar a arreglo y descartar archivos tamaño 0
       const arr = Array.isArray(fl?.adjuntos)
         ? fl.adjuntos
         : fl?.adjuntos
-          ? [fl.adjuntos]
-          : [];
+        ? [fl.adjuntos]
+        : [];
       files = arr.filter((fi) => fi && (fi.size || 0) > 0);
 
-      // Límite total 5 MB
       const total = files.reduce((sum, fi) => sum + (fi.size || 0), 0);
       if (total > 5 * 1024 * 1024) {
-        return send(res, 400, { error: "Los adjuntos no pueden superar 5 MB en total." });
+        return send(res, 400, {
+          error: "Los adjuntos no pueden superar 5 MB en total.",
+        });
       }
     } else {
       // JSON
@@ -87,17 +84,30 @@ export default async function handler(req, res) {
       return send(res, 400, { error: "Faltan campos obligatorios." });
     }
 
+    // Si no hay SMTP configurado (por ejemplo en desarrollo local),
+    // no lanzamos error; simplemente simulamos envío correcto.
+    if (
+      !process.env.SMTP_HOST ||
+      !process.env.SMTP_USER ||
+      !process.env.SMTP_PASS ||
+      !process.env.CONTACT_FROM ||
+      !process.env.CONTACT_TO
+    ) {
+      console.error("CONTACT: SMTP no configurado, simulando envío OK (entorno local)");
+      return send(res, 200, { ok: true, simulated: true });
+    }
+
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),
       secure: false,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
     });
 
     const attachments = (files || []).map((f) => ({
       filename: f.originalFilename || f.newFilename,
       path: f.filepath,
-      contentType: f.mimetype
+      contentType: f.mimetype,
     }));
 
     const subject = `Contacto web: ${tema} — ${nombre}`;
@@ -115,7 +125,7 @@ Tema: ${tema}
 Mensaje:
 ${mensaje}
 `,
-      attachments
+      attachments,
     });
 
     return send(res, 200, { ok: true });

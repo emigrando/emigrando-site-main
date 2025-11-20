@@ -1,16 +1,9 @@
-'use client';
+"use client";
 
+import { useState, FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { motion } from "framer-motion";
-
-const scrollToId = (id: string) => {
-  if (typeof document === "undefined") return;
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -18,6 +11,65 @@ const fadeUp = {
 };
 
 export default function HomePage() {
+  const [miniSending, setMiniSending] = useState(false);
+  const [miniOk, setMiniOk] = useState<string | null>(null);
+  const [miniErr, setMiniErr] = useState<string | null>(null);
+
+  async function handleMiniSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setMiniOk(null);
+    setMiniErr(null);
+    setMiniSending(true);
+
+    try {
+      const fd = new FormData(event.currentTarget);
+
+      const payload = {
+        nombre: (fd.get("nombre") || "").toString().trim(),
+        email: (fd.get("email") || "").toString().trim(),
+        telefono: (fd.get("telefono") || "").toString().trim(),
+        ciudad: (fd.get("ciudad") || "").toString().trim(),
+        tema: (fd.get("tema") || "").toString().trim(),
+        mensaje: (fd.get("mensaje") || "").toString().trim(),
+      };
+
+      if (
+        !payload.nombre ||
+        !payload.email ||
+        !payload.telefono ||
+        !payload.ciudad ||
+        !payload.tema ||
+        !payload.mensaje
+      ) {
+        setMiniErr("Por favor completa todos los campos del formulario.");
+        setMiniSending(false);
+        return;
+      }
+
+      const r = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const j = await r.json().catch(() => ({} as any));
+
+      if (r.ok && j?.ok) {
+        setMiniOk(
+          "Mensaje enviado correctamente. Te responderé por correo o WhatsApp."
+        );
+        event.currentTarget.reset();
+      } else {
+        setMiniErr(j?.error || "Error interno al enviar el contacto.");
+      }
+    } catch (e) {
+      console.error(e);
+      setMiniErr("Error de red al enviar el contacto.");
+    } finally {
+      setMiniSending(false);
+    }
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#f5f7fb] to-white text-slate-900">
       {/* HERO */}
@@ -87,14 +139,23 @@ export default function HomePage() {
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Button
+                size="lg"
                 className="rounded-full px-6 shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all"
-                onClick={() => scrollToId("contacto")}
+                onClick={() => {
+                  const target = document.getElementById("contacto");
+                  if (target) {
+                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                }}
               >
                 Quiero asesoría
               </Button>
 
               <button
                 type="button"
+                onClick={() => {
+                  window.location.href = "/intake/login";
+                }}
                 className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-6 py-2 text-sm font-medium text-slate-800 shadow-sm backdrop-blur-sm hover:border-indigo-500 hover:text-indigo-600 hover:shadow-md hover:-translate-y-[1px] transition-all"
               >
                 <span className="mr-2 text-xs">🔑</span>
@@ -261,20 +322,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CÓMO TRABAJAMOS + MINI FORM QUE REDIRIGE AL FORMULARIO COMPLETO */}
+      {/* CÓMO TRABAJAMOS + MINI FORM */}
       <section
         id="como-trabajamos"
         className="border-t border-slate-100 bg-[#f8fafc]"
       >
         <div className="mx-auto max-w-6xl px-4 py-16 lg:py-18">
           <div className="grid gap-10 lg:grid-cols-[1.1fr,0.9fr] lg:items-center">
-            {/* TEXTO LADO IZQUIERDO: CÓMO TRABAJAMOS */}
+            {/* TEXTO LADO IZQUIERDO */}
             <div>
               <span className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-medium text-indigo-600">
                 Cómo trabajamos · paso a paso
               </span>
               <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
-                Nos cuentas tu caso, te damos una oferta clara y empezamos juntos.
+                Nos cuentas tu caso, te doy una oferta clara y empezamos juntos.
               </h2>
               <p className="mt-3 text-sm text-slate-600">
                 No trabajamos con promesas vacías. Partimos de tu situación real y
@@ -287,7 +348,7 @@ export default function HomePage() {
                     1
                   </span>
                   <p>
-                    Nos contactas y nos cuentas sobre tu caso: dónde estás, qué permiso
+                    Nos contactas y cuentas tu caso: dónde estás, qué permiso
                     tienes o buscas, qué autoridad está involucrada o qué carta te llegó.
                   </p>
                 </div>
@@ -296,7 +357,7 @@ export default function HomePage() {
                     2
                   </span>
                   <p>
-                    Analizamos tu situación y te enviamos una propuesta gratuita con
+                    Analizo tu situación y te envío una propuesta gratuita con
                     objetivos concretos y realistas: qué se puede hacer y qué no.
                   </p>
                 </div>
@@ -305,15 +366,15 @@ export default function HomePage() {
                     3
                   </span>
                   <p>
-                    Si aceptas, haces el primer pago de anticipo y empezamos de inmediato
-                    con los escritos, formularios y pasos necesarios ante las autoridades
+                    Si aceptas, haces el primer pago de anticipo y empezamos con
+                    los escritos, formularios y pasos necesarios ante las autoridades
                     que correspondan.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* MINI FORM -> REDIRECCIÓN A /contacto */}
+            {/* MINI FORM */}
             <Card
               id="contacto"
               className="rounded-2xl border-slate-100 bg-white p-6 shadow-sm"
@@ -322,14 +383,13 @@ export default function HomePage() {
                 Empecemos con un primer contacto
               </h3>
               <p className="mt-2 text-xs text-slate-500">
-                Este mini formulario solo recoge lo básico. Al enviarlo irás al
-                formulario completo para terminar el proceso.
+                Este mini formulario recoge lo básico para que pueda entender tu caso
+                y darte una respuesta inicial útil.
               </p>
 
               <form
                 className="mt-4 space-y-3 text-sm"
-                action="/contacto"
-                method="get"
+                onSubmit={handleMiniSubmit}
               >
                 <div>
                   <label className="block text-xs font-medium text-slate-700">
@@ -343,35 +403,63 @@ export default function HomePage() {
                   />
                 </div>
 
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700">
+                      Correo electrónico
+                    </label>
+                    <input
+                      className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+                      type="email"
+                      name="email"
+                      placeholder="tu@correo.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700">
+                      Teléfono móvil
+                    </label>
+                    <input
+                      className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+                      type="tel"
+                      name="telefono"
+                      placeholder="+49..."
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-xs font-medium text-slate-700">
-                    Correo electrónico
+                    Ciudad en Alemania
                   </label>
                   <input
                     className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
-                    type="email"
-                    name="email"
-                    placeholder="tu@correo.com"
+                    type="text"
+                    name="ciudad"
+                    placeholder="Ej: Augsburg, München, Berlin..."
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-slate-700">
-                    Situación actual
+                    Motivo principal de la consulta
                   </label>
                   <select
-                    name="situation"
+                    name="tema"
                     className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
                   >
                     <option value="">Selecciona una opción</option>
-                    <option value="fuera">Estoy fuera de Alemania</option>
-                    <option value="llegando">Acabo de llegar</option>
-                    <option value="dentro">
-                      Ya vivo en Alemania y tengo permiso
+                    <option value="migracion_residencia">Migración y residencia</option>
+                    <option value="formacion_empleo">
+                      Reconocimiento de títulos / empleo
                     </option>
-                    <option value="problemas">
-                      Tengo un problema concreto con una autoridad
+                    <option value="apoyos_sociales">
+                      Apoyos sociales (Bürgergeld, Wohngeld...)
                     </option>
+                    <option value="defensa_administrativa">
+                      Defensa administrativa (Jobcenter, Ausländerbehörde...)
+                    </option>
+                    <option value="otro">Otro motivo</option>
                   </select>
                 </div>
 
@@ -383,20 +471,34 @@ export default function HomePage() {
                     name="mensaje"
                     rows={3}
                     className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 resize-none focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
-                    placeholder="Ej: Estoy en proceso de Niederlassung y tengo dudas con Jobcenter / Ausländerbehörde..."
+                    placeholder="Ej: Estoy con Jobcenter/Ausländerbehörde por el tema de..."
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  className="mt-2 w-full rounded-full shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all"
+                  disabled={miniSending}
+                  className="mt-2 w-full rounded-full shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all disabled:opacity-60 disabled:hover:translate-y-0"
                 >
-                  Ir al formulario completo
+                  {miniSending
+                    ? "Enviando..."
+                    : "Enviar y seguir al formulario completo"}
                 </Button>
 
+                {miniOk && (
+                  <p className="mt-2 text-[11px] leading-relaxed text-emerald-600">
+                    {miniOk}
+                  </p>
+                )}
+                {miniErr && (
+                  <p className="mt-2 text-[11px] leading-relaxed text-rose-600">
+                    {miniErr}
+                  </p>
+                )}
+
                 <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
-                  Tus datos se procesan en servidores ubicados en la UE. Si tienes
-                  prisa, también puedes escribirme directo por WhatsApp o Telegram.
+                  Tus datos se procesan en servidores ubicados en la UE. Puedes ampliar
+                  la información más adelante en el formulario detallado de clientes.
                 </p>
               </form>
             </Card>
