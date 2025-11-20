@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 
@@ -15,7 +15,6 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5">
         {/* Marca / logo */}
         <Link href="/" className="flex items-center gap-2">
-          {/* Aquí luego cambiamos por tu logo */}
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-indigo-500 text-xs font-semibold text-white shadow-md">
             DE
           </div>
@@ -35,25 +34,27 @@ export default function Navbar() {
             >
               {item.label}
             </a>
-            <a
-              href="/impressum"
-              className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
-            >
-              Impressum
-            </a>
-            <a
-              href="/datenschutz"
-              className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
-            >
-              Datenschutz
-            </a>
-            <a
-              href="/agb"
-              className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
-            >
-              AGB
-            </a>
           ))}
+
+          {/* Enlaces legales extra (no dentro del map) */}
+          <a
+            href="/impressum"
+            className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
+          >
+            Impressum
+          </a>
+          <a
+            href="/datenschutz"
+            className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
+          >
+            Datenschutz
+          </a>
+          <a
+            href="/agb"
+            className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
+          >
+            AGB
+          </a>
         </nav>
 
         {/* CTA escritorio */}
