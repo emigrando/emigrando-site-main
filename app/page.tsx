@@ -187,7 +187,7 @@ export default function HomePage() {
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
           >
             <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-indigo-100/80 via-white to-sky-100/70 blur-3xl" />
-            <Card className="relative rounded-[2rem] border border-slate-100 bg-white/95 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.10)] card-float">
+            <Card className="relative rounded-[2rem] border border-slate-100 bg-white/95 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.10)]">
               <div className="grid gap-4 sm:grid-cols-2">
                 <motion.div
                   className="group rounded-2xl border border-indigo-100 bg-indigo-50/80 px-4 py-5 shadow-sm transition-all"
