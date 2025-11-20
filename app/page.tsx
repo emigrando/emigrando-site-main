@@ -64,7 +64,8 @@ export default function HomePage() {
       }
     } catch (e) {
       console.error(e);
-      setMiniErr("Error de red al enviar el contacto.");
+      // si no quieres mostrar nada al usuario, comenta o borra esta línea:
+    // setMiniErr("Error de red al enviar el contacto.");
     } finally {
       setMiniSending(false);
     }
@@ -449,16 +450,19 @@ export default function HomePage() {
                     className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
                   >
                     <option value="">Selecciona una opción</option>
-                    <option value="migracion_residencia">Migración y residencia</option>
+                    <option value="migracion_residencia">
+                      Solicitud/cambio de residencia, Duldung, etc</option>
                     <option value="formacion_empleo">
-                      Reconocimiento de títulos / empleo
+                      Reconocimiento de títulos universitarios / empleo / Formación
                     </option>
                     <option value="apoyos_sociales">
                       Apoyos sociales (Bürgergeld, Wohngeld...)
                     </option>
                     <option value="defensa_administrativa">
-                      Defensa administrativa (Jobcenter, Ausländerbehörde...)
-                    </option>
+                      Asesoria en defensa administrativa (Jobcenter, Ausländerbehörde...)
+                      </option>
+                    <option value="Asilo">
+                      Asilo, Solicitud, Apelación, Beneficios</option>
                     <option value="otro">Otro motivo</option>
                   </select>
                 </div>
@@ -471,7 +475,7 @@ export default function HomePage() {
                     name="mensaje"
                     rows={3}
                     className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-0 resize-none focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
-                    placeholder="Ej: Estoy con Jobcenter/Ausländerbehörde por el tema de..."
+                    placeholder="Ej: Recibi una respuesta negativa de una autoridad (Ausländerbehörde, Jobcenter, Sozialamt) y necesito ayuda..."
                   />
                 </div>
 
