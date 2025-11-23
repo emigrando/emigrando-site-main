@@ -1,74 +1,100 @@
-export default function Datenschutz() {
+export default function Impressum() {
   return (
     <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-extrabold">Datenschutzerklärung</h1>
+      <h1 className="text-3xl font-extrabold">Impressum</h1>
 
       <div className="mt-6 space-y-6 text-sm leading-6">
         <section>
-          <h2 className="font-bold">1. Verantwortlicher</h2>
+          <h2 className="font-bold">Diensteanbieter</h2>
           <p>
-            Verantwortlicher im Sinne der DSGVO ist:<br />
-            Merwis Gabriel Solorzano Diaz; Herrenbachstr. 33a; 86161 Augsburg<br />
+            Angaben gemäß § 5 TMG.<br />
+            Merwis Gabriel Solorzano Diaz<br />
+            Herrenbachstr. 33a<br />
+            86161 Augsburg; Deutschland
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-bold">Kontakt</h2>
+          <p>
             E-Mail: info@emigrando.de
           </p>
         </section>
 
         <section>
-          <h2 className="font-bold">2. Hosting</h2>
+          <h2 className="font-bold">Tätigkeit</h2>
           <p>
-            Diese Website wird bei Vercel Inc. gehostet. Vercel verarbeitet Metadaten und Protokolldaten zur Bereitstellung und Sicherheit des Dienstes.
-            Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO; berechtigtes Interesse an stabiler und sicherer Bereitstellung.
+            Selbständige Beratung und unterstützende Dienstleistungen im Bereich
+            Migration; Soziales und Verwaltung; keine Rechtsberatung im Sinne
+            des Rechtsdienstleistungsgesetzes; keine Vertretung vor Gericht.
           </p>
         </section>
 
         <section>
-          <h2 className="font-bold">3. Kontaktformular und Intake</h2>
+          <h2 className="font-bold">Umsatzsteuer</h2>
+          <p>USt-IdNr.: nicht vorhanden.</p>
+        </section>
+
+        <section>
+          <h2 className="font-bold">
+            Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
+          </h2>
           <p>
-            Bei Nutzung unseres Kontaktformulars oder des Intake-Formulars verarbeiten wir die eingegebenen Daten; z. B. Name; E-Mail; Telefon; Nachricht sowie freiwillige Angaben zu Kindern.
-            Rechtsgrundlagen sind Art. 6 Abs. 1 lit. b DSGVO; Vertragsanbahnung oder Durchführung; und Art. 6 Abs. 1 lit. a DSGVO; Einwilligung; soweit freiwillige Informationen mitgeteilt werden.
-          </p>
-          <p>
-            Zur strukturierten Erfassung und internen Bearbeitung Ihrer Anfrage setzen wir Airtable als Auftragsverarbeiter ein.
-            Dabei kann eine Übermittlung in Drittländer; insbesondere USA; stattfinden.
-            Airtable stellt geeignete Garantien; insbesondere Standardvertragsklauseln; bereit. Speicherdauer entspricht dem erforderlichen Zeitraum zur Bearbeitung sowie den gesetzlichen Aufbewahrungspflichten.
+            Merwis Gabriel Solorzano Diaz; Anschrift wie oben.
           </p>
         </section>
 
         <section>
-          <h2 className="font-bold">4. E-Mail-Kommunikation</h2>
+          <h2 className="font-bold">Haftung für Inhalte</h2>
           <p>
-            Für die E-Mail-Zustellung verwenden wir einen SMTP-Dienst. Rechtsgrundlagen: Art. 6 Abs. 1 lit. b DSGVO; Kommunikation im Rahmen vorvertraglicher oder vertraglicher Maßnahmen; sowie Art. 6 Abs. 1 lit. f DSGVO; berechtigtes Interesse an effizienter Kommunikation.
+            Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte
+            auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach
+            §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht
+            verpflichtet; übermittelte oder gespeicherte fremde Informationen zu
+            überwachen oder nach Umständen zu forschen; die auf eine
+            rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung
+            oder Sperrung der Nutzung von Informationen nach den allgemeinen
+            Gesetzen bleiben hiervon unberührt.
           </p>
         </section>
 
         <section>
-          <h2 className="font-bold">5. Cookies und TTDSG</h2>
+          <h2 className="font-bold">Haftung für Links</h2>
           <p>
-            Wir setzen derzeit keine nicht-technisch notwendigen Cookies ein.
-            Sofern in Zukunft eine Einwilligung nach § 25 TTDSG erforderlich sein sollte; etwa für Tracking oder Marketing; holen wir diese vorab ein.
+            Unser Angebot enthält Links zu externen Websites Dritter; auf deren
+            Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten
+            Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten
+            verantwortlich. Bei Bekanntwerden von Rechtsverletzungen werden wir
+            derartige Links umgehend entfernen.
           </p>
         </section>
 
         <section>
-          <h2 className="font-bold">6. Ihre Rechte</h2>
+          <h2 className="font-bold">Urheberrecht</h2>
           <p>
-            Sie haben Rechte auf Auskunft; Berichtigung; Löschung; Einschränkung der Verarbeitung; Datenübertragbarkeit sowie Widerspruch; Art. 15 bis 21 DSGVO.
-            Zudem besteht ein Beschwerderecht bei einer Aufsichtsbehörde; Art. 77 DSGVO.
+            Die durch den Seitenbetreiber erstellten Inhalte und Werke auf
+            diesen Seiten unterliegen dem deutschen Urheberrecht. Die
+            Vervielfältigung; Bearbeitung; Verbreitung und jede Art der
+            Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der
+            vorherigen schriftlichen Zustimmung des jeweiligen Urhebers; soweit
+            nicht eine gesetzliche Erlaubnis greift.
           </p>
         </section>
 
         <section>
-          <h2 className="font-bold">7. Speicherdauer</h2>
+          <h2 className="font-bold">
+            Online-Streitbeilegung und Verbraucherstreitbeilegung
+          </h2>
           <p>
-            Wir verarbeiten personenbezogene Daten nur so lange; wie es für die jeweiligen Zwecke erforderlich ist; oder gesetzliche Aufbewahrungsfristen bestehen.
+            Die Europäische Kommission stellt eine Plattform zur
+            Online-Streitbeilegung bereit; abrufbar unter
+            {" "}
+            https://ec.europa.eu/consumers/odr.
           </p>
-        </section>
-
-        <section>
-          <h2 className="font-bold">8. Empfänger</h2>
-          <p>
-            Empfänger im Rahmen der Verarbeitung können Auftragsverarbeiter sein; z. B. Hostinganbieter; E-Mail-Dienstleister; Airtable Inc.
-            Mit Auftragsverarbeitern bestehen Verträge nach Art. 28 DSGVO.
+          <p className="mt-2">
+            Der Anbieter ist nicht verpflichtet und nicht bereit; an
+            Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
+            teilzunehmen.
           </p>
         </section>
       </div>
