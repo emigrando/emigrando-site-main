@@ -1,6 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root {
+  /* PALETA PRINCIPAL EMIGRANDO.DE */
+  --color-azul: #38BDF8;        /* Azul Emigrando */
+  --color-indigo: #6366F1;      /* Indigo Emigrando */
+  --color-violeta: #A855F7;     /* Violeta suave */
+
+  /* PALETA SECUNDARIA */
+  --color-verde: #10B981;       /* Verde Legal */
+  --color-amarillo: #F59E0B;    /* Amarillo Atención */
+  --color-rosa: #F43F5E;        /* Rosa Administrativo */
+
+  /* NEUTROS Y FONDO */
+  --color-blanco-glass: rgba(255, 255, 255, 0.85);
+  --color-texto-principal: #0F172A;   /* Slate 900 */
+  --color-texto-secundario: #475569;  /* Slate 600 */
+  --color-borde: #E2E8F0;             /* Slate 100 */
+
+  /* GRADIENTE OFICIAL EMIGRANDO.DE */
+  --gradiente-emigrando: linear-gradient(
+    to right,
+    #38BDF8,
+    #6366F1,
+    #A855F7
+  );
+}
 
 /* -----------------------------
    BASE GLOBAL · MODO CLARO iOS
