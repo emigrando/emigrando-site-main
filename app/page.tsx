@@ -457,7 +457,7 @@ export default function HomePage() {
               <Card className="relative overflow-hidden rounded-2xl border border-slate-100 bg-slate-50/90 p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
                 <div className="pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-full bg-indigo-400/80" />
                 <h3 className="text-sm font-semibold text-slate-900">
-                  Cómo trabajamos tu dossier
+                  Cómo trabajamos tu caso
                 </h3>
                 <ol className="mt-3 space-y-1.5 text-xs text-slate-600 list-decimal pl-4">
                   <li>Analizamos tu título; documentos y país de origen.</li>

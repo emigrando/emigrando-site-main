@@ -7,15 +7,17 @@ const navLinks = [
   { href: "#titulos", label: "Reconocimiento de títulos" },
   { href: "#como-trabajamos", label: "Cómo trabajamos" },
   { href: "#contacto", label: "Contacto" },
+  { href: "/dashboard/cliente", label: "Panel cliente (beta)" },
 ];
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-100/60 bg-white/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5">
-        {/* Marca / logo */}
+    <header className="sticky top-0 z-40 border-b border-slate-100/50 bg-white/80 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-2.5">
+
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-indigo-500 text-xs font-semibold text-white shadow-md">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-indigo-500 text-xs font-semibold text-white shadow-md">
             DE
           </div>
           <span className="text-sm font-semibold tracking-tight">
@@ -24,50 +26,30 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Navegación escritorio */}
-        <nav className="hidden items-center gap-7 text-sm text-slate-600 md:flex">
+        {/* Navegación desktop */}
+        <nav className="hidden items-center gap-2 md:flex">
           {navLinks.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="relative transition-colors hover:text-indigo-600"
+              className="px-3 py-1.5 rounded-full text-[13px] font-medium text-slate-600 hover:bg-slate-100/70 hover:text-indigo-600 transition-all"
             >
               {item.label}
             </a>
           ))}
-
-          {/* Enlaces legales extra (no dentro del map) */}
-          <a
-            href="/impressum"
-            className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
-          >
-            Impressum
-          </a>
-          <a
-            href="/datenschutz"
-            className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
-          >
-            Datenschutz
-          </a>
-          <a
-            href="/agb"
-            className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
-          >
-            AGB
-          </a>
         </nav>
 
-        {/* CTA escritorio */}
+        {/* CTA */}
         <div className="hidden md:block">
           <a
             href="#contacto"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-5 py-2 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(79,70,229,0.35)] transition-all hover:-translate-y-[1px] hover:shadow-[0_15px_40px_rgba(79,70,229,0.45)]"
           >
             Contactar asesor
           </a>
         </div>
 
-        {/* Vista móvil: solo botón compacto */}
+        {/* Móvil */}
         <div className="md:hidden">
           <a
             href="#contacto"
