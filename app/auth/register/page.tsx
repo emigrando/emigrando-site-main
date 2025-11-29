@@ -49,7 +49,7 @@ export default function RegisterPage() {
     return null;
   }
 
-  async function handleRegister(e: React.FormEvent) {
+  async function handleRegister(e: any) {
     e.preventDefault();
     setErr(null);
     setOk(null);
@@ -62,10 +62,22 @@ export default function RegisterPage() {
 
     setLoading(true);
 
-    // 1) Crear usuario en Supabase Auth
+    // 1. Crear usuario en Supabase Auth con metadata
     const { data, error } = await supabase.auth.signUp({
       email,
       password: pass,
+      options: {
+        data: {
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          // aquí usamos la clave birth_date, pero le pasamos el valor de birthDate
+          birth_date: birthDate || null,
+          nationality: nationality.trim(),
+          residence_status: residenceStatus.trim(),
+          address: address.trim(),
+          role: "cliente",
+        },
+      },
     });
 
     if (error) {
@@ -74,33 +86,11 @@ export default function RegisterPage() {
       return;
     }
 
-    const user = data.user;
-
-    // 2) Crear registro en profiles con rol por defecto "cliente"
-    if (user) {
-      const { error: profileError } = await supabase.from("profiles").insert({
-        id: user.id,
-        role: "cliente",
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        birth_date: birthDate || null,
-        nationality: nationality.trim(),
-        residence_status: residenceStatus.trim(),
-        address: address.trim(),
-      });
-
-      if (profileError) {
-        setErr(
-          "Se creó el usuario pero hubo un problema creando el perfil interno. Revisa la tabla profiles en Supabase. Detalle: " +
-            profileError.message
-        );
-        setLoading(false);
-        return;
-      }
-    }
+    // 2. Ya NO hacemos insert manual en profiles.
+    // El trigger en auth.users crea el profile automáticamente.
 
     setOk(
-      "Cuenta creada. Revisa tu correo para confirmar tu dirección antes de iniciar sesión."
+      "Cuenta creada correctamente. Revisa tu correo para confirmar tu dirección antes de iniciar sesión."
     );
     setLoading(false);
   }

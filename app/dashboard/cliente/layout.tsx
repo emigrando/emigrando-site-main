@@ -37,7 +37,7 @@ export default function ClienteDashboardLayout({
       // Hay usuario → mirar rol en profiles
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select<"role", ProfileRow>("role")
+        .select("role")
         .eq("id", userData.user.id)
         .maybeSingle();
 

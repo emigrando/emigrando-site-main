@@ -1,108 +1,104 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
 
-type Role = "cliente" | "asesor" | "admin";
+type RolPermitido = "cliente" | "asesor" | "admin";
 
 interface DashboardGuardProps {
-  children: ReactNode;
-  // Roles permitidos para esta ruta. Si no se pasa, cualquier rol con sesión puede entrar.
-  allowedRoles?: Role[];
+  allowedRoles?: RolPermitido[];
+  children: React.ReactNode;
 }
 
 export default function DashboardGuard({
-  children,
   allowedRoles,
+  children,
 }: DashboardGuardProps) {
-  const [checking, setChecking] = useState(true);
-  const router = useRouter();
   const supabase = createSupabaseBrowserClient();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [checking, setChecking] = useState(true);
+  const [blocked, setBlocked] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function checkSessionAndRole() {
-      // 1) Sesión
-      const {
-        data: { session },
-        error: sessionError,
-      } = await supabase.auth.getSession();
+    async function run() {
+      // 1) Verificar sesión
+      const { data: userData, error: authError } =
+        await supabase.auth.getUser();
 
       if (!isMounted) return;
 
-      if (sessionError || !session) {
+      if (authError || !userData?.user) {
+        setBlocked(true);
+        setChecking(false);
         router.replace("/auth/login");
         return;
       }
 
-      const userId = session.user.id;
+      const user = userData.user;
 
-      // 2) Buscar profile
-      const { data: profile, error: profileError } = await supabase
+      // Si no hay roles específicos, basta con estar logueado
+      if (!allowedRoles || allowedRoles.length === 0) {
+        setChecking(false);
+        return;
+      }
+
+      // 2) Cargar perfil por ID = auth.uid()
+      const { data: profileRow, error: profileError } = await supabase
         .from("profiles")
-        .select("id, role, full_name")
-        .eq("id", userId)
+        .select("role")
+        .eq("id", user.id) // IMPORTANTE: aquí usamos id, NO user_id
         .maybeSingle();
 
       if (!isMounted) return;
 
-      let finalProfile = profile;
-
-      // 3) Si no hay profile, crear uno por defecto (role = cliente)
-      if (!profile) {
-        const { data: inserted, error: insertError } = await supabase
-          .from("profiles")
-          .insert({
-            id: userId,
-            role: "cliente",
-            full_name: session.user.email ?? null,
-          })
-          .select("id, role, full_name")
-          .single();
-
-        if (!isMounted) return;
-
-        if (insertError) {
-          console.error("Error creando profile por defecto", insertError);
-          router.replace("/auth/login");
-          return;
-        }
-
-        finalProfile = inserted;
-      } else if (profileError) {
-        console.error("Error cargando profile", profileError);
+      if (profileError || !profileRow) {
+        // No hay perfil o error → mandamos a login
+        setBlocked(true);
+        setChecking(false);
         router.replace("/auth/login");
         return;
       }
 
-      // 4) Si la ruta exige roles y el usuario no está permitido, lo sacamos
-      if (allowedRoles && allowedRoles.length > 0) {
-        const role = (finalProfile?.role ?? "cliente") as Role;
-        if (!allowedRoles.includes(role)) {
-          router.replace("/");
-          return;
-        }
+      const role = (profileRow.role || "") as RolPermitido;
+
+      if (!role || !allowedRoles.includes(role)) {
+        // Usuario logueado pero sin rol permitido para esta ruta
+        setBlocked(true);
+        setChecking(false);
+        router.replace("/auth/login");
+        return;
       }
 
-      if (!isMounted) return;
+      // Todo bien
       setChecking(false);
     }
 
-    checkSessionAndRole();
+    run();
 
     return () => {
       isMounted = false;
     };
-  }, [router, supabase, allowedRoles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]); // si cambia de ruta dentro del dashboard, revalida
 
   if (checking) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f7fb] to-white">
-        <p className="text-sm text-slate-600">Verificando acceso...</p>
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f7fb] to-white px-4">
+        <div className="rounded-2xl border border-slate-200 bg-white/90 px-6 py-4 shadow-md text-sm text-slate-600">
+          Verificando tu acceso seguro.
+        </div>
       </main>
     );
+  }
+
+  if (blocked) {
+    // Mientras hace el replace al /auth/login, no mostramos nada
+    return null;
   }
 
   return <>{children}</>;

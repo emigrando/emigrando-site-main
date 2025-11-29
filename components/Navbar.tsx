@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "#servicios", label: "Servicios" },
@@ -11,6 +12,14 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const pathname = usePathname() || "";
+  const isDashboard = pathname.startsWith("/dashboard");
+
+  // Si estamos en /dashboard/... no mostramos el navbar público
+  if (isDashboard) {
+    return null;
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-100/50 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-2.5">

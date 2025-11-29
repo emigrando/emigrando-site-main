@@ -241,3 +241,53 @@ select:focus {
 .card-float {
   animation: cardFloat 14s ease-in-out infinite;
 }
+
+/* ————————————————
+   FONDO ANIMADO GLOBAL (garantizado)
+   ———————————————— */
+.hero-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: radial-gradient(
+      circle at 30% 20%,
+      rgba(99, 102, 241, 0.35),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 70% 80%,
+      rgba(236, 72, 153, 0.35),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(14, 165, 233, 0.25),
+      transparent 60%
+    );
+  background-size: 200% 200%;
+  animation: ambientMove 18s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ambientMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 80% 50%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* Ruido fino encima del fondo */
+.hero-noise {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: url("https://grainy-gradients.vercel.app/noise.png");
+  mix-blend-mode: soft-light;
+}

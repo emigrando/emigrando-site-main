@@ -24,6 +24,7 @@ export default function AsesorDashboardLayout({
     let isMounted = true;
 
     async function check() {
+      // 1) Usuario autenticado
       const { data: userData, error: userError } = await supabase.auth.getUser();
 
       if (!isMounted) return;
@@ -34,13 +35,17 @@ export default function AsesorDashboardLayout({
         return;
       }
 
+      // 2) Perfil con rol en la tabla profiles
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select<"role", ProfileRow>("role")
-        .eq("id", userData.user.id)
+        .select("role")
+        .eq("id", userData.user.id)   // <- AQUÍ EL CAMBIO CLAVE
         .maybeSingle();
 
+      if (!isMounted) return;
+
       if (profileError || !profile) {
+        // No hay perfil o error: lo mando al login
         router.replace("/auth/login");
         setChecking(false);
         return;

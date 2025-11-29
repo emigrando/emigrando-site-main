@@ -1,8 +1,28 @@
-import { createBrowserClient } from "@supabase/ssr";
+// lib/supabaseClient.ts
+"use client";
 
-export function createSupabaseBrowserClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+let browserClient: SupabaseClient | null = null;
+
+export function createSupabaseBrowserClient(): SupabaseClient {
+  if (browserClient) return browserClient;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error(
+      "Faltan NEXT_PUBLIC_SUPABASE_URL o NEXT_PUBLIC_SUPABASE_ANON_KEY en las variables de entorno (.env.local)."
+    );
+  }
+
+  browserClient = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+  });
+
+  return browserClient;
 }

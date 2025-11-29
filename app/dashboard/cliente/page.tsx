@@ -1,83 +1,252 @@
 "use client";
 
-import LogoutButton from "@/components/LogoutButton";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import DashboardGuard from "@/components/DashboardGuard";
+import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
+import LogoutButton from "@/components/LogoutButton";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0 },
 };
 
+interface CaseRow {
+  id: string;
+  case_code: string | null;
+  tipo: string | null;
+  client_progress_percent: number | null;
+  client_phase_label: string | null;
+  client_last_update: string | null;
+  created_at?: string;
+}
+
+interface CaseEventRow {
+  id: string;
+  created_at: string;
+  title: string | null;
+  description: string | null;
+  event_type: string | null;
+  visible_for_client: boolean | null;
+}
+
 export default function ClienteDashboardPage() {
-  const estadoCaso = {
-    numero: "EM-2025-00123",
-    tipo: "Residencia · §25 Abs. 3 AufenthG",
-    fase: "En revisión de autoridad",
-    porcentaje: 65,
-    ultimaActualizacion: "15.11.2025",
-  };
+  const supabase = createSupabaseBrowserClient();
+  const router = useRouter();
 
-  const hitos = [
-    {
-      fecha: "01.10.2025",
-      titulo: "Primer contacto",
-      detalle: "Nos contaste tu caso y revisamos la documentación inicial.",
-      tipo: "info",
-    },
-    {
-      fecha: "05.10.2025",
-      titulo: "Análisis del caso",
-      detalle:
-        "Te enviamos la propuesta con los pasos a seguir y objetivos realistas.",
-      tipo: "info",
-    },
-    {
-      fecha: "12.10.2025",
-      titulo: "Escrito enviado a la autoridad",
-      detalle: "Se envió el escrito principal a la Ausländerbehörde.",
-      tipo: "accion",
-    },
-    {
-      fecha: "15.11.2025",
-      titulo: "Respuesta parcial de la autoridad",
-      detalle:
-        "Recibimos respuesta inicial. Estamos preparando el siguiente paso.",
-      tipo: "alerta",
-    },
-  ];
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState<string | null>(null);
+  const [caseData, setCaseData] = useState<CaseRow | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
 
+  const [events, setEvents] = useState<CaseEventRow[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function init() {
+      // 1) Verificar usuario autenticado
+      const { data: userData, error: authError } = await supabase.auth.getUser();
+
+      if (!isMounted) return;
+
+      if (authError || !userData?.user) {
+        router.replace("/auth/login");
+        setCheckingAuth(false);
+        setLoading(false);
+        return;
+      }
+
+      const userId = userData.user.id;
+
+      // 2) Cargar perfil para saludo
+      const { data: profileRow } = await supabase
+        .from("profiles")
+        .select("first_name")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (!isMounted) return;
+
+      if (profileRow?.first_name) {
+        setFirstName(profileRow.first_name);
+      }
+
+      // 3) Buscar el caso más reciente de este cliente
+      const { data: caseRow, error: caseError } = await supabase
+        .from("cases")
+        .select(
+          "id, case_code, tipo, client_progress_percent, client_phase_label, client_last_update, created_at"
+        )
+        .eq("client_user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!isMounted) return;
+
+      if (caseError) {
+        setErr(caseError.message);
+        setLoading(false);
+        setCheckingAuth(false);
+        setEventsLoading(false);
+        return;
+      }
+
+      if (!caseRow) {
+        setCaseData(null);
+        setLoading(false);
+        setCheckingAuth(false);
+        setEvents([]);
+        setEventsLoading(false);
+        return;
+      }
+
+      const c = caseRow as CaseRow;
+      setCaseData(c);
+      setLoading(false);
+      setCheckingAuth(false);
+
+      // 4) Cargar historial visible para el cliente
+      setEventsLoading(true);
+      const { data: eventsRows, error: eventsError } = await supabase
+        .from("case_events")
+        .select(
+          "id, created_at, title, description, event_type, visible_for_client"
+        )
+        .eq("case_id", c.id)
+        .eq("visible_for_client", true)
+        .order("created_at", { ascending: true });
+
+      if (!isMounted) return;
+
+      if (eventsError) {
+        console.error("Error cargando historial de caso para cliente:", eventsError.message);
+        setEvents([]);
+        setEventsLoading(false);
+        return;
+      }
+
+      setEvents((eventsRows || []) as CaseEventRow[]);
+      setEventsLoading(false);
+    }
+
+    init();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [router, supabase]);
+
+  if (checkingAuth) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f7fb] to-white px-4">
+        <div className="rounded-2xl border border-slate-200 bg-white/90 px-6 py-4 shadow-md text-sm text-slate-600">
+          Verificando tu acceso seguro...
+        </div>
+      </main>
+    );
+  }
+
+  // Valores derivados para el panel
+  const progressRaw = caseData?.client_progress_percent ?? 0;
+  const progress =
+    typeof progressRaw === "number"
+      ? Math.min(100, Math.max(0, progressRaw))
+      : 0;
+
+  const fase =
+    caseData?.client_phase_label ||
+    "Estamos revisando tu caso y organizando los próximos pasos.";
+
+  const lastUpdateSource =
+    caseData?.client_last_update || caseData?.created_at || null;
+
+  const ultimaActualizacion = lastUpdateSource
+    ? new Date(lastUpdateSource).toLocaleDateString("de-DE")
+    : "Sin fecha registrada";
+
+  // Número de caso: preferimos case_code; si no hay, una versión corta del UUID
+  const numeroCaso =
+    caseData?.case_code ||
+    (caseData?.id
+      ? `CAS-${caseData.id.slice(-8).toUpperCase()}`
+      : "Aún sin número interno asignado");
+
+  const tipoCaso =
+    caseData?.tipo || "Caso migratorio / social en proceso de análisis";
+
+  // Por ahora mantenemos plazos orientativos estáticos
   const proximosPlazos = [
     {
       fecha: "30.11.2025",
-      descripcion: "Plazo para respuesta a la autoridad",
+      descripcion: "Fecha orientativa para revisar respuesta de la autoridad",
       critico: true,
     },
     {
       fecha: "05.12.2025",
-      descripcion: "Revisión interna de documentos actualizados",
+      descripcion: "Revisión interna de nuevos documentos o cartas",
       critico: false,
     },
   ];
 
   return (
-    <DashboardGuard>
-      <main className="min-h-screen bg-gradient-to-b from-[#f5f7fb] to-white text-slate-900">
-        <section className="mx-auto max-w-6xl px-4 pt-20 pb-16 lg:pt-24 lg:pb-20">
-          <div className="mb-6">
+    <main className="min-h-screen bg-gradient-to-b from-[#f5f7fb] to-white text-slate-900">
+      <section className="mx-auto max-w-6xl px-4 pt-20 pb-16 lg:pt-24 lg:pb-20">
+        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
             <p className="text-xs font-medium text-sky-700 uppercase tracking-[0.18em]">
               Panel del cliente
             </p>
             <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-              Seguimiento de tu caso
+              {firstName ? `Hola, ${firstName}` : "Hola"}
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-slate-600">
-              Aquí ves el estado general de tu caso; las últimas acciones que
-              hemos tomado; y los próximos plazos importantes. Más adelante este
-              panel se conectará a tus datos reales con acceso seguro.
+              Aquí ves el estado general de tu caso; las últimas acciones y los
+              próximos pasos que estamos manejando. Esta información se
+              actualiza desde nuestro panel interno.
             </p>
-          </div>
 
+            <div className="mt-3">
+              <button
+                onClick={() => router.push("/dashboard/cliente/intake")}
+                className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-4 py-1.5 text-[11px] font-semibold text-white shadow-md hover:bg-indigo-700 hover:shadow-lg transition"
+              >
+                Completar o actualizar mis datos
+              </button>
+            </div>
+          </div>
+          <div className="mt-1 md:mt-0">
+            <LogoutButton />
+          </div>
+        </div>
+
+        {loading && (
+          <p className="text-sm text-slate-600">
+            Cargando la información de tu caso...
+          </p>
+        )}
+
+        {!loading && err && (
+          <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            Hubo un problema al cargar los datos de tu caso: {err}
+          </div>
+        )}
+
+        {!loading && !err && !caseData && (
+          <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            Todavía no hay un caso vinculado a tu usuario en nuestro sistema.
+            Si ya hablamos y nos enviaste documentación; probablemente estamos
+            terminando de crear tu expediente interno. Si ves esto por mucho
+            tiempo; escríbenos directamente o completa tus datos personales con
+            el botón de arriba.
+          </div>
+        )}
+
+        {/* Solo mostramos el panel completo si hay caso */}
+        {!loading && !err && caseData && (
           <div className="grid gap-6 lg:grid-cols-[1.1fr,0.9fr] lg:items-start">
             {/* Columna izquierda: Estado general + línea de tiempo */}
             <motion.div
@@ -92,24 +261,14 @@ export default function ClienteDashboardPage() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-medium text-slate-500">
-                      Número de caso
+                      Número interno de caso
                     </p>
                     <p className="text-sm font-semibold text-slate-900">
-                      {estadoCaso.numero}
+                      {numeroCaso}
                     </p>
                   </div>
                   <div className="rounded-full bg-sky-50 px-3 py-1 text-[11px] font-medium text-sky-700">
-                    {estadoCaso.tipo}
-                  </div>
-                </div>
-
-                <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                  <div>
-                    {/* aquí va tu título y texto del panel cliente si algún día lo mueves aquí */}
-                  </div>
-
-                  <div className="mt-1 md:mt-0">
-                    <LogoutButton />
+                    {tipoCaso}
                   </div>
                 </div>
 
@@ -119,74 +278,95 @@ export default function ClienteDashboardPage() {
                       Estado actual
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-900">
-                      {estadoCaso.fase}
+                      {fase}
                     </p>
                     <p className="mt-1 text-[11px] text-slate-500">
-                      Última actualización el {estadoCaso.ultimaActualizacion}
+                      Última actualización registrada: {ultimaActualizacion}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs font-medium text-slate-500">
-                      Avance aproximado
+                      Avance aproximado del proceso
                     </p>
                     <div className="mt-2">
                       <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
                         <div
                           className="h-2 rounded-full bg-gradient-to-r from-sky-400 via-indigo-500 to-violet-500 transition-all"
-                          style={{ width: `${estadoCaso.porcentaje}%` }}
+                          style={{ width: `${progress}%` }}
                         />
                       </div>
                       <p className="mt-1 text-[11px] text-slate-500">
-                        Este porcentaje es orientativo; no es una garantía de
-                        resultado; solo indica el avance del proceso.
+                        Progreso estimado:{" "}
+                        <span className="font-semibold">{progress}%</span>. Este
+                        valor es orientativo; no es una promesa de resultado; refleja
+                        la etapa en la que está tu caso dentro de nuestro trabajo
+                        interno.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Línea de tiempo de eventos */}
+              {/* Línea de tiempo basada en case_events visibles */}
               <div className="rounded-2xl border border-slate-100 bg-white/90 p-5 shadow-[0_18px_45px_rgba(15,23,42,0.04)]">
                 <h2 className="text-sm font-semibold text-slate-900">
                   Historial de tu caso
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  Resumen de los pasos más importantes que hemos dado hasta
-                  ahora.
+                  Aquí verás un resumen de los pasos más importantes que hayamos
+                  marcado para que el cliente pueda ver. No muestra todas las
+                  notas internas; solo los hitos relevantes.
                 </p>
 
-                <ol className="mt-4 space-y-4">
-                  {hitos.map((hito, idx) => (
-                    <li key={idx} className="flex gap-3">
-                      <div className="flex flex-col items-center">
-                        <div
-                          className={
-                            "mt-1 h-2 w-2 rounded-full border " +
-                            (hito.tipo === "accion"
-                              ? "bg-sky-500 border-sky-400"
-                              : hito.tipo === "alerta"
-                              ? "bg-amber-500 border-amber-400"
-                              : "bg-slate-300 border-slate-300")
-                          }
-                        />
-                        {idx < hitos.length - 1 && (
-                          <div className="mt-1 h-full w-px flex-1 bg-slate-200" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-[11px] font-medium text-slate-500">
-                          {hito.fecha}
-                        </p>
-                        <p className="text-sm font-semibold text-slate-900">
-                          {hito.titulo}
-                        </p>
-                        <p className="mt-1 text-xs text-slate-600">
-                          {hito.detalle}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
+                {eventsLoading && (
+                  <p className="mt-4 text-xs text-slate-500">
+                    Cargando historial de tu caso...
+                  </p>
+                )}
+
+                {!eventsLoading && events.length === 0 && (
+                  <p className="mt-4 text-xs text-slate-500">
+                    Todavía no hemos publicado eventos en el historial de este
+                    caso. Esto no significa que no estemos trabajando; solo que
+                    aún no hay movimientos que necesites ver aquí.
+                  </p>
+                )}
+
+                {!eventsLoading && events.length > 0 && (
+                  <ol className="mt-4 space-y-4">
+                    {events.map((ev, idx) => (
+                      <li key={ev.id} className="flex gap-3">
+                        <div className="flex flex-col items-center">
+                          <div className="mt-1 h-2 w-2 rounded-full border bg-sky-500 border-sky-400" />
+                          {idx < events.length - 1 && (
+                            <div className="mt-1 h-full w-px flex-1 bg-slate-200" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-[11px] font-medium text-slate-500">
+                            {new Date(ev.created_at).toLocaleString("de-DE", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </p>
+                          {ev.title && (
+                            <p className="text-sm font-semibold text-slate-900">
+                              {ev.title}
+                            </p>
+                          )}
+                          {ev.description && (
+                            <p className="mt-1 text-xs text-slate-600 whitespace-pre-line">
+                              {ev.description}
+                            </p>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                )}
               </div>
             </motion.div>
 
@@ -197,13 +377,14 @@ export default function ClienteDashboardPage() {
               transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
               className="space-y-6"
             >
-              {/* Próximos plazos */}
+              {/* Próximos plazos (de momento orientativos) */}
               <div className="rounded-2xl border border-slate-100 bg-slate-50/90 p-5 shadow-[0_18px_45px_rgba(15,23,42,0.04)]">
                 <h2 className="text-sm font-semibold text-slate-900">
-                  Próximos plazos
+                  Próximos pasos orientativos
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  Fechas orientativas para que tengas claridad de lo que viene.
+                  Estas fechas son de ejemplo. Más adelante se conectarán a los
+                  plazos reales de tu caso dentro de nuestro sistema.
                 </p>
 
                 <ul className="mt-4 space-y-3">
@@ -216,7 +397,7 @@ export default function ClienteDashboardPage() {
                         <p className="text-[11px] font-medium text-slate-500">
                           {plazo.fecha}
                         </p>
-                        <p className="text-xs text-slate-800">
+                          <p className="text-xs text-slate-800">
                           {plazo.descripcion}
                         </p>
                       </div>
@@ -230,21 +411,22 @@ export default function ClienteDashboardPage() {
                 </ul>
 
                 <p className="mt-3 text-[11px] text-slate-400">
-                  Estos plazos no sustituyen las fechas oficiales de cartas o
-                  Bescheide; siempre revisa las fechas exactas que indique la autoridad.
+                  Los plazos vinculantes siempre serán los que aparezcan en las
+                  cartas oficiales (Bescheide, citaciones, etc.). Este panel es
+                  solo una ayuda visual.
                 </p>
               </div>
 
               {/* Bloque contacto rápido */}
               <div className="rounded-2xl border border-slate-900/40 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-900 p-5 text-slate-50 shadow-[0_22px_55px_rgba(15,23,42,0.65)]">
                 <h2 className="text-sm font-semibold">
-                  ¿Ves algo urgente o no entiendes una carta?
+                  ¿Ves algo urgente o recibiste una carta nueva?
                 </h2>
                 <p className="mt-2 text-xs text-slate-200">
                   Si recibes una nueva carta; un plazo muy corto o algo que no
                   entiendas; puedes escribir directamente y adjuntar el
-                  documento. En la siguiente versión de este panel, podrás subir
-                  bescheide y cartas desde aquí mismo.
+                  documento. En una versión siguiente podrás subir Bescheide y
+                  cartas desde este mismo panel.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-3 text-[11px]">
                   <a
@@ -273,8 +455,8 @@ export default function ClienteDashboardPage() {
               </div>
             </motion.div>
           </div>
-        </section>
-      </main>
-    </DashboardGuard>
+        )}
+      </section>
+    </main>
   );
 }
