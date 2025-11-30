@@ -15,19 +15,23 @@ export default function CursorGlow() {
   }, []);
 
   return (
-    <motion.div className="pointer-events-none fixed inset-0 -z-10">
+    <motion.div className="pointer-events-none fixed inset-0 z-0">
       <motion.div
-        className="h-80 w-80 rounded-full"
         style={{
           position: "absolute",
           left: pos.x - 160,
           top: pos.y - 160,
-          background: "radial-gradient(circle at center, rgba(255,0,0,0.7), transparent 60%)",
-          mixBlendMode: "soft-light",
+          width: 320,
+          height: 320,
+          borderRadius: "9999px",
+          background:
+            "radial-gradient(circle at center, rgba(129,140,248,0.6), transparent 60%)",
           filter: "blur(6px)",
+          mixBlendMode: "soft-light",
+          boxShadow: "0 0 80px rgba(129,140,248,0.6)",
         }}
-        animate={{ x: pos.x - 160, y: pos.y - 160, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 120, damping: 30 }}
+        animate={{ x: pos.x - 160, y: pos.y - 160 }}
+        transition={{ type: "spring", stiffness: 120, damping: 24, mass: 0.7 }}
       />
     </motion.div>
   );

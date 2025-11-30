@@ -47,7 +47,6 @@ export default function ClienteDashboardPage() {
     let isMounted = true;
 
     async function init() {
-      // 1) Verificar usuario autenticado
       const { data: userData, error: authError } = await supabase.auth.getUser();
 
       if (!isMounted) return;
@@ -61,7 +60,6 @@ export default function ClienteDashboardPage() {
 
       const userId = userData.user.id;
 
-      // 2) Cargar perfil para saludo
       const { data: profileRow } = await supabase
         .from("profiles")
         .select("first_name")
@@ -74,7 +72,6 @@ export default function ClienteDashboardPage() {
         setFirstName(profileRow.first_name);
       }
 
-      // 3) Buscar el caso más reciente de este cliente
       const { data: caseRow, error: caseError } = await supabase
         .from("cases")
         .select(
@@ -109,7 +106,6 @@ export default function ClienteDashboardPage() {
       setLoading(false);
       setCheckingAuth(false);
 
-      // 4) Cargar historial visible para el cliente
       setEventsLoading(true);
       const { data: eventsRows, error: eventsError } = await supabase
         .from("case_events")
@@ -123,7 +119,10 @@ export default function ClienteDashboardPage() {
       if (!isMounted) return;
 
       if (eventsError) {
-        console.error("Error cargando historial de caso para cliente:", eventsError.message);
+        console.error(
+          "Error cargando historial de caso para cliente:",
+          eventsError.message
+        );
         setEvents([]);
         setEventsLoading(false);
         return;
@@ -150,7 +149,6 @@ export default function ClienteDashboardPage() {
     );
   }
 
-  // Valores derivados para el panel
   const progressRaw = caseData?.client_progress_percent ?? 0;
   const progress =
     typeof progressRaw === "number"
@@ -168,7 +166,6 @@ export default function ClienteDashboardPage() {
     ? new Date(lastUpdateSource).toLocaleDateString("de-DE")
     : "Sin fecha registrada";
 
-  // Número de caso: preferimos case_code; si no hay, una versión corta del UUID
   const numeroCaso =
     caseData?.case_code ||
     (caseData?.id
@@ -178,7 +175,6 @@ export default function ClienteDashboardPage() {
   const tipoCaso =
     caseData?.tipo || "Caso migratorio / social en proceso de análisis";
 
-  // Por ahora mantenemos plazos orientativos estáticos
   const proximosPlazos = [
     {
       fecha: "30.11.2025",
@@ -245,10 +241,8 @@ export default function ClienteDashboardPage() {
           </div>
         )}
 
-        {/* Solo mostramos el panel completo si hay caso */}
         {!loading && !err && caseData && (
           <div className="grid gap-6 lg:grid-cols-[1.1fr,0.9fr] lg:items-start">
-            {/* Columna izquierda: Estado general + línea de tiempo */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -257,7 +251,7 @@ export default function ClienteDashboardPage() {
               className="space-y-6"
             >
               {/* Tarjeta estado general */}
-              <div className="rounded-2xl border border-slate-100 bg-white/90 p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)]">
+              <div className="rounded-2xl border border-slate-100 bg-white/90 p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] card-float">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-medium text-slate-500">
@@ -307,7 +301,7 @@ export default function ClienteDashboardPage() {
                 </div>
               </div>
 
-              {/* Línea de tiempo basada en case_events visibles */}
+              {/* Historial de caso */}
               <div className="rounded-2xl border border-slate-100 bg-white/90 p-5 shadow-[0_18px_45px_rgba(15,23,42,0.04)]">
                 <h2 className="text-sm font-semibold text-slate-900">
                   Historial de tu caso
@@ -370,14 +364,12 @@ export default function ClienteDashboardPage() {
               </div>
             </motion.div>
 
-            {/* Columna derecha: próximos plazos + contacto */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
               className="space-y-6"
             >
-              {/* Próximos plazos (de momento orientativos) */}
               <div className="rounded-2xl border border-slate-100 bg-slate-50/90 p-5 shadow-[0_18px_45px_rgba(15,23,42,0.04)]">
                 <h2 className="text-sm font-semibold text-slate-900">
                   Próximos pasos orientativos
@@ -397,7 +389,7 @@ export default function ClienteDashboardPage() {
                         <p className="text-[11px] font-medium text-slate-500">
                           {plazo.fecha}
                         </p>
-                          <p className="text-xs text-slate-800">
+                        <p className="text-xs text-slate-800">
                           {plazo.descripcion}
                         </p>
                       </div>
@@ -417,7 +409,6 @@ export default function ClienteDashboardPage() {
                 </p>
               </div>
 
-              {/* Bloque contacto rápido */}
               <div className="rounded-2xl border border-slate-900/40 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-900 p-5 text-slate-50 shadow-[0_22px_55px_rgba(15,23,42,0.65)]">
                 <h2 className="text-sm font-semibold">
                   ¿Ves algo urgente o recibiste una carta nueva?

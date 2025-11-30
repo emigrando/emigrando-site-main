@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
+import SplineBackground from "@/components/SplineBackground";
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};:,.?]).{6,}$/;
@@ -49,7 +50,7 @@ export default function RegisterPage() {
     return null;
   }
 
-  async function handleRegister(e: any) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     setErr(null);
     setOk(null);
@@ -62,15 +63,13 @@ export default function RegisterPage() {
 
     setLoading(true);
 
-    // 1. Crear usuario en Supabase Auth con metadata
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password: pass,
       options: {
         data: {
           first_name: firstName.trim(),
           last_name: lastName.trim(),
-          // aquí usamos la clave birth_date, pero le pasamos el valor de birthDate
           birth_date: birthDate || null,
           nationality: nationality.trim(),
           residence_status: residenceStatus.trim(),
@@ -86,9 +85,6 @@ export default function RegisterPage() {
       return;
     }
 
-    // 2. Ya NO hacemos insert manual en profiles.
-    // El trigger en auth.users crea el profile automáticamente.
-
     setOk(
       "Cuenta creada correctamente. Revisa tu correo para confirmar tu dirección antes de iniciar sesión."
     );
@@ -96,8 +92,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f7fb] to-white px-4">
-      <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-xl">
+    <main className="relative min-h-screen flex items-center justify-center bg-[#e1f2ff] px-4 overflow-hidden">
+      {/* Fondo 3D de Spline */}
+      <SplineBackground />
+
+      <div className="relative z-10 w-full max-w-lg rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-xl backdrop-blur-xl">
         <h1 className="text-xl font-semibold text-slate-900">
           Crear nueva cuenta
         </h1>

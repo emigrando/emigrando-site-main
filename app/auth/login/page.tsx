@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
+import SplineBackground from "@/components/SplineBackground";
 
 export default function LoginPage() {
   const supabase = createSupabaseBrowserClient();
@@ -27,13 +28,16 @@ export default function LoginPage() {
       return;
     }
 
-    // Login exitoso → por ahora mandamos al dashboard cliente
     window.location.href = "/dashboard/cliente";
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f7fb] to-white px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-xl">
+    <main className="relative min-h-screen flex items-center justify-center bg-[#e1f2ff] px-4 overflow-hidden">
+      {/* Fondo 3D de Spline */}
+      <SplineBackground />
+
+      {/* Tarjeta de login */}
+      <div className="relative z-10 w-full max-w-sm rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-xl backdrop-blur-xl">
         <h1 className="text-xl font-semibold text-slate-900">
           Acceso a tu cuenta
         </h1>
@@ -68,7 +72,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-full bg-indigo-600 text-white py-2 text-sm font-semibold hover:bg-indigo-700 transition shadow-md"
+            className="w-full rounded-full bg-indigo-600 text-white py-2 text-sm font-semibold hover:bg-indigo-700 transition shadow-md disabled:opacity-60"
           >
             {loading ? "Entrando..." : "Entrar"}
           </button>

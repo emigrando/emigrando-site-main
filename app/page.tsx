@@ -4,6 +4,9 @@ import { useState, FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { motion } from "framer-motion";
+import SplineHero from "@/components/SplineHero";
+import { HiDocumentText, HiUserGroup, HiChatBubbleLeftRight } from "react-icons/hi2";
+import FrostedIcon from "@/components/FrostedIcon";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -76,6 +79,9 @@ export default function HomePage() {
         id="servicios"
         className="relative mx-auto max-w-6xl px-4 pt-20 pb-20 lg:pt-28 lg:pb-28"
       >
+        {/* Fondo 3D de Spline (demo) */}
+        <SplineHero />
+
         {/* Fondo sensorial: glow + partículas + ruido */}
         <div className="hero-ambient" />
         <div className="hero-noise" />
@@ -193,12 +199,27 @@ export default function HomePage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
                 >
-                  <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-indigo-500 text-[13px] text-white">
-                    ⇄
+                  <div className="mb-3">
+                    <FrostedIcon
+                      gradientClass="from-indigo-400 via-violet-400 to-sky-400"
+                      icon={
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M4 8h9" />
+                          <path d="M11 5l3 3-3 3" />
+                          <path d="M20 16h-9" />
+                          <path d="M13 13l-3 3 3 3" />
+                        </svg>
+                      }
+                    />
                   </div>
-                  <h3 className="text-sm font-semibold text-slate-900">
-                    Migración y residencia
-                  </h3>
                   <p className="mt-2 text-xs text-slate-600">
                     Visas; permisos de residencia; asilo y protección;
                     reagrupación familiar y cambios de estatus.
@@ -210,9 +231,29 @@ export default function HomePage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
                 >
-                  <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-violet-500 text-[13px] text-white">
-                    🎓
+                  <div className="mb-3">
+                    <FrostedIcon
+                      gradientClass="from-purple-400 via-fuchsia-400 to-pink-400"
+                      icon={
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          {/* Birrete */}
+                          <path d="M4 10l8-4 8 4-8 4-8-4z" />
+                          <path d="M6.5 11.3V15a3 3 0 0 0 5.5 1.7" />
+                          <path d="M20 11v3" />
+                          <circle cx="20" cy="15" r="0.9" />
+                        </svg>
+                      }
+                    />
                   </div>
+
                   <h3 className="text-sm font-semibold text-slate-900">
                     Formación y empleo
                   </h3>
@@ -228,9 +269,28 @@ export default function HomePage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
                 >
-                  <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500 text-[13px] text-white">
-                    €
+                  <div className="mb-3">
+                    <FrostedIcon
+                      gradientClass="from-emerald-400 via-teal-400 to-cyan-400"
+                      icon={
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <circle cx="12" cy="12" r="6.5" />
+                          <path d="M9 10h4.2" />
+                          <path d="M9 14h4.2" />
+                          <path d="M13.5 8.5c-2-.9-4.5.3-4.5 2.7 0 2.4 2.5 3.6 4.5 2.7" />
+                        </svg>
+                      }
+                    />
                   </div>
+
                   <h3 className="text-sm font-semibold text-slate-900">
                     Apoyos sociales
                   </h3>
@@ -245,8 +305,34 @@ export default function HomePage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 240, damping: 20 }}
                 >
-                  <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-rose-500 text-[13px] text-white">
-                    ⚖
+                  <div className="mb-3">
+                    <FrostedIcon
+                      gradientClass="from-rose-400 via-red-400 to-orange-400"
+                      icon={
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          {/* Barra superior */}
+                          <path d="M6 7h12" />
+                          {/* Poste central */}
+                          <path d="M12 7v9" />
+                          {/* Base */}
+                          <path d="M8 18h8" />
+                          {/* Brazos */}
+                          <path d="M8 11h4" />
+                          <path d="M16 11h-4" />
+                          {/* Platillos */}
+                          <path d="M6 11.5c0 1.2.8 2.1 2 2.1s2-.9 2-2.1" />
+                          <path d="M14 11.5c0 1.2.8 2.1 2 2.1s2-.9 2-2.1" />
+                        </svg>
+                      }
+                    />
                   </div>
                   <h3 className="text-sm font-semibold text-slate-900">
                     Asesoramiento en tu defensa administrativa
@@ -267,12 +353,28 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-4 py-14">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <Card className="flex h-full flex-col rounded-2xl border-slate-100 bg-slate-50 p-5 shadow-md hover:-translate-y-[2px] hover:shadow-lg transition-all">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600 text-xl">
-                📄
-              </div>
-              <h3 className="text-sm font-semibold text-slate-900">
-                Documentación
-              </h3>
+            <div className="mb-4">
+              <FrostedIcon
+                gradientClass="from-amber-400 via-orange-400 to-rose-400"
+                icon={
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="7" y="4" width="10" height="16" rx="2" />
+                    <path d="M11 8h4" />
+                    <path d="M11 12h4" />
+                    <path d="M11 16h2.5" />
+                    <path d="M13 4v3.5h4" />
+                  </svg>
+                }
+              />
+            </div>
               <p className="mt-2 text-xs text-slate-500">
                 Cartas y formularios oficiales listos para entregar en Behörden,
                 sin demoras.
@@ -280,12 +382,26 @@ export default function HomePage() {
             </Card>
 
             <Card className="flex h-full flex-col rounded-2xl border-slate-100 bg-slate-50 p-5 shadow-md hover:-translate-y-[2px] hover:shadow-lg transition-all">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 text-xl">
-                ✅
-              </div>
-              <h3 className="text-sm font-semibold text-slate-900">
-                Cumplimiento
-              </h3>
+              <div className="mb-4">
+                  <FrostedIcon
+                    gradientClass="from-emerald-400 via-teal-400 to-sky-400"
+                    icon={
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="7" />
+                        <path d="M9.2 12.2l1.8 2.1 3.8-4.6" />
+                      </svg>
+                    }
+                  />
+                </div>
+
               <p className="mt-2 text-xs text-slate-500">
                 Textos legales y privacidad alineados con normativa alemana
                 vigente para que duermas tranquilo.
@@ -293,12 +409,30 @@ export default function HomePage() {
             </Card>
 
             <Card className="flex h-full flex-col rounded-2xl border-slate-100 bg-slate-50 p-5 shadow-md hover:-translate-y-[2px] hover:shadow-lg transition-all">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-600 text-xl">
-                🤝
-              </div>
-              <h3 className="text-sm font-semibold text-slate-900">
-                Acompañamiento
-              </h3>
+              <div className="mb-4">
+                  <FrostedIcon
+                    gradientClass="from-sky-400 via-indigo-400 to-violet-400"
+                    icon={
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        {/* Cabezas */}
+                        <circle cx="9" cy="9" r="2.1" />
+                        <circle cx="15" cy="9" r="2.1" />
+                        {/* Cuerpos */}
+                        <path d="M6.5 16.5c.5-2 1.9-3.2 3.5-3.2 1.6 0 3 1.2 3.5 3.2" />
+                        <path d="M10.5 16.5c.6-1.9 2-3 3.5-3 1.6 0 3 1.1 3.5 3" />
+                      </svg>
+                    }
+                  />
+                </div>
+
               <p className="mt-2 text-xs text-slate-500">
                 Te guiamos paso a paso; con contexto y explicaciones; no solo un
                 documento suelto.
@@ -306,12 +440,26 @@ export default function HomePage() {
             </Card>
 
             <Card className="flex h-full flex-col rounded-2xl border-slate-100 bg-slate-50 p-5 shadow-md hover:-translate-y-[2px] hover:shadow-lg transition-all">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 text-xl">
-                ✉️
-              </div>
-              <h3 className="text-sm font-semibold text-slate-900">
-                Contacto directo
-              </h3>
+              <div className="mb-4">
+                  <FrostedIcon
+                    gradientClass="from-indigo-400 via-violet-400 to-fuchsia-400"
+                    icon={
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <rect x="4" y="6" width="16" height="12" rx="2" />
+                        <path d="M5.5 8.5 12 12l6.5-3.5" />
+                      </svg>
+                    }
+                  />
+                </div>
+
               <p className="mt-2 text-xs text-slate-500">
                 Respuesta clara; agenda rápida y seguimiento del estado de tu
                 caso; no quedas en el limbo.
